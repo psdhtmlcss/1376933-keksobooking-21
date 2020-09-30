@@ -3,22 +3,11 @@
 // Переменные и функции для создания массива с похожими объявлениями
 const MAX_COUNT = 8;
 const similarAds = [];
-// let i = 0;
 
 function getRandom(min, max) {
   let x = Math.floor(Math.random() * (max - min) + min);
   return x;
 };
-
-// Как подставить в качестве агрумента строку с переменной i ?
-// const generateData = function (string) {
-//   let elements = [];
-//   for (i; i < MAX_COUNT; i++) {
-//     elements[i] = string;
-//   }
-
-//   return elements;
-// };
 
 const getAvatars = () => {
   let avatars = [];
@@ -112,7 +101,6 @@ const getUniqueElements = function (arr) {
     }
   }
 
-  // Как создать функцию, чтобы массив с фото всегда был непустым?
   return uniqueElements;
 };
 
@@ -167,8 +155,6 @@ const getAds = () => {
 };
 
 const ads = getAds();
-
-console.log(ads);
 
 // Переменные и функции для создания меток на карте
 const mapPinWidth = 50;
