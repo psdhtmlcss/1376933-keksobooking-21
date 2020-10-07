@@ -1,7 +1,7 @@
 # Личный проект «Кексобукинг» [![Build status][travis-image]][travis-url]
 
 * Студент: [Оксана Турова](https://up.htmlacademy.ru/javascript/21/user/1376933).
-* Наставник: [Алексей Беляев](https://htmlacademy.ru/profile/id691043).
+* Наставник: [Евгений Лепёшкин](https://htmlacademy.ru/profile/id144641).
 
 ---
 
