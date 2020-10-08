@@ -2,10 +2,20 @@
 
 const MAX_COUNT = 8;
 const MAX_LOCATION = 1000;
-const MAPPINWIDTH = 50;
-const MAPPINHEIGHT = 70;
+const MapPin = {
+  WIDTH: 50,
+  HEIGHT: 70,
+  MAIN_WIDTH: 65,
+  MAIN_HEIGHT: 87
+};
 const LOCATION_Y_MIN = 130;
 const LOCATION_Y_MAX = 630;
+const Mouse = {
+  LEFT_KEY_BUTTON: 0
+};
+const Keys = {
+  ENTER_KEY: 'Enter'
+};
 const similarAds = [];
 const types = ['palace', 'flat', 'house', 'bungalow'];
 const checkInOut = ['12:00', '13:00', '14:00'];
@@ -14,6 +24,12 @@ const map = document.querySelector('.map');
 const mapPinsFragment = document.createDocumentFragment();
 const mapPinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
 const mapPins = document.querySelector('.map__pins');
+const mapPinMain = mapPins.querySelector('.map__pin--main');
+const mapFilters = document.querySelector('.map__filters');
+const adForm = document.querySelector('.ad-form');
+const inputAddress = adForm.querySelector('#address');
+const rooms = adForm.querySelector('select[name="rooms"]');
+const capacity = adForm.querySelector('select[name="capacity"]');
 
 const getRandom = (min, max) => {
   let x = Math.floor(Math.random() * (max - min) + min);
@@ -57,7 +73,7 @@ const getAds = () => {
           'price': 0,
           'type': `${types[getRandom(0, types.length - 1)]}`,
           'rooms': 1,
-          'guests': 1,
+          'capacity': 1,
           'checkin': `${checkInOut[getRandom(0, checkInOut.length - 1)]}`,
           'checkout': `${checkInOut[getRandom(0, checkInOut.length - 1)]}`,
           'features': shaffleArray(features).slice(0, getRandom(0, features.length)),
@@ -78,8 +94,8 @@ getAds();
 const createMapPin = function (pin) {
   let mapPin = mapPinTemplate.cloneNode(true);
   let img = mapPin.querySelector('img');
-  mapPin.style.left = `${pin.location.x - MAPPINWIDTH / 2}px`;
-  mapPin.style.top = `${pin.location.y - MAPPINHEIGHT}px`;
+  mapPin.style.left = `${pin.location.x - MapPin.WIDTH / 2}px`;
+  mapPin.style.top = `${pin.location.y - MapPin.HEIGHT}px`;
   img.src = pin.author.avatar;
   img.alt = pin.offer.title;
 
@@ -94,7 +110,88 @@ const createMapPinsFragment = () => {
   mapPins.appendChild(mapPinsFragment);
 };
 
-createMapPinsFragment();
+// createMapPinsFragment();
 
-map.classList.remove('map--faded');
+// Disabled elements
+const disabledForm = (form, isTrue) => {
+  let formElements = form.children;
+  if (!isTrue) {
+    form.classList.remove('ad-form--disabled');
+    map.classList.remove('map--faded');
+  };
+  for (let i = 0; i < formElements.length; i++) {
+    formElements[i].disabled = isTrue;
+  }
+};
+
+disabledForm(mapFilters, true);
+disabledForm(adForm, true);
+
+const getInitialCoordinates = () => {
+  inputAddress.value = `${Math.floor(mapPinMain.offsetTop - MapPin.MAIN_WIDTH / 2)}, ${Math.floor(mapPinMain.offsetLeft - MapPin.MAIN_WIDTH / 2)}`;
+};
+
+getInitialCoordinates();
+
+const getCoordinatesAfterActivate = () => {
+  inputAddress.value = `${Math.floor(mapPinMain.offsetTop - MapPin.MAIN_HEIGHT)}, ${Math.floor(mapPinMain.offsetLeft - MapPin.MAIN_WIDTH / 2)}`;
+};
+
+mapPinMain.addEventListener('mousedown', function(evt) {
+  if (evt.button === Mouse.LEFT_KEY_BUTTON) {
+    disabledForm(mapFilters, false);
+    disabledForm(adForm, false);
+    getCoordinatesAfterActivate();
+  }
+});
+
+document.addEventListener('keydown', function(evt) {
+  if (evt.key === Keys.ENTER_KEY && evt.target.classList.contains('map__pin--main')) {
+    disabledForm(mapFilters, false);
+    disabledForm(adForm, false);
+    getCoordinatesAfterActivate();
+  }
+});
+
+const checkCapacity = () => {
+  if (rooms.value === '1') {
+    if (capacity.value === '3' || capacity.value === '2' || capacity.value === '0') {
+      capacity.setCustomValidity('Для одной комнаты можно выбрать только одного гостя!');
+    } else {
+      capacity.setCustomValidity('');
+    }
+  } else if (rooms.value === '2') {
+    if (capacity.value === '3' || capacity.value === '0') {
+      capacity.setCustomValidity('Для двух комнат можно выбрать только одного или два гостя!');
+    } else {
+      capacity.setCustomValidity('');
+    }
+  } else if (rooms.value === '3') {
+    if (capacity.value === '0') {
+      capacity.setCustomValidity('Для трёх комнат можно выбрать только одного, два или три гостя!');
+    } else {
+      capacity.setCustomValidity('');
+    }
+  } else {
+    if (capacity.value === '1' || capacity.value === '2' || capacity.value === '3') {
+      capacity.setCustomValidity('Не для гостей');
+    } else {
+      capacity.setCustomValidity('');
+    }
+  };
+}
+
+rooms.addEventListener('change', function () {
+  checkCapacity();
+  capacity.reportValidity();
+});
+
+capacity.addEventListener('change', function () {
+  checkCapacity();
+  capacity.reportValidity();
+});
+
+
+
+
 
