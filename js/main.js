@@ -2,10 +2,20 @@
 
 const MAX_COUNT = 8;
 const MAX_LOCATION = 1000;
-const MAPPINWIDTH = 50;
-const MAPPINHEIGHT = 70;
+const MapPin = {
+  WIDTH: 50,
+  HEIGHT: 70,
+  MAIN_WIDTH: 65,
+  MAIN_HEIGHT: 87
+};
 const LOCATION_Y_MIN = 130;
 const LOCATION_Y_MAX = 630;
+const Mouse = {
+  LEFT_KEY_BUTTON: 0
+};
+const Keys = {
+  ENTER_KEY: 'Enter'
+};
 const similarAds = [];
 const types = ['palace', 'flat', 'house', 'bungalow'];
 const checkInOut = ['12:00', '13:00', '14:00'];
@@ -14,6 +24,14 @@ const map = document.querySelector('.map');
 const mapPinsFragment = document.createDocumentFragment();
 const mapPinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
 const mapPins = document.querySelector('.map__pins');
+const mapPinMain = mapPins.querySelector('.map__pin--main');
+const mapFilters = document.querySelector('.map__filters');
+const mapFiltersElements = mapFilters.querySelectorAll('.map__filter');
+const adForm = document.querySelector('.ad-form');
+const adFormElements = adForm.querySelectorAll('.ad-form__element');
+const inputAddress = adForm.querySelector('#address');
+const rooms = adForm.querySelector('select[name="rooms"]');
+const capacity = adForm.querySelector('select[name="capacity"]');
 
 const getRandom = (min, max) => {
   let x = Math.floor(Math.random() * (max - min) + min);
@@ -57,7 +75,7 @@ const getAds = () => {
           'price': 0,
           'type': `${types[getRandom(0, types.length - 1)]}`,
           'rooms': 1,
-          'guests': 1,
+          'capacity': 1,
           'checkin': `${checkInOut[getRandom(0, checkInOut.length - 1)]}`,
           'checkout': `${checkInOut[getRandom(0, checkInOut.length - 1)]}`,
           'features': shaffleArray(features).slice(0, getRandom(0, features.length)),
@@ -78,8 +96,8 @@ getAds();
 const createMapPin = function (pin) {
   let mapPin = mapPinTemplate.cloneNode(true);
   let img = mapPin.querySelector('img');
-  mapPin.style.left = `${pin.location.x - MAPPINWIDTH / 2}px`;
-  mapPin.style.top = `${pin.location.y - MAPPINHEIGHT}px`;
+  mapPin.style.left = `${pin.location.x - MapPin.WIDTH / 2}px`;
+  mapPin.style.top = `${pin.location.y - MapPin.HEIGHT}px`;
   img.src = pin.author.avatar;
   img.alt = pin.offer.title;
 
@@ -94,7 +112,79 @@ const createMapPinsFragment = () => {
   mapPins.appendChild(mapPinsFragment);
 };
 
-createMapPinsFragment();
+// createMapPinsFragment();
 
-map.classList.remove('map--faded');
+const disabledForm = (elements, isTrue) => {
+  for (let i = 0; i < elements.length; i++) {
+    elements[i].disabled = isTrue;
+  };
+};
+
+disabledForm(mapFiltersElements, true);
+disabledForm(adFormElements, true);
+
+const enabledForm = () => {
+  disabledForm(mapFilters, false);
+  disabledForm(adForm, false);
+  adForm.classList.remove('ad-form--disabled');
+  map.classList.remove('map--faded');
+  mapPinMain.removeEventListener('mousedown', onMousedown);
+  document.removeEventListener('keydown', onKeyPressEnter);
+};
+
+const getInitialCoordinates = () => {
+  inputAddress.value = `${Math.floor(mapPinMain.offsetTop - MapPin.MAIN_WIDTH / 2)}, ${Math.floor(mapPinMain.offsetLeft - MapPin.MAIN_WIDTH / 2)}`;
+};
+
+getInitialCoordinates();
+
+const getCoordinatesAfterActivate = () => {
+  inputAddress.value = `${Math.floor(mapPinMain.offsetTop - MapPin.MAIN_HEIGHT)}, ${Math.floor(mapPinMain.offsetLeft - MapPin.MAIN_WIDTH / 2)}`;
+};
+
+const onMousedown = (evt) => {
+  if (evt.button === Mouse.LEFT_KEY_BUTTON) {
+    getCoordinatesAfterActivate();
+    enabledForm();
+  }
+};
+
+const onKeyPressEnter = (evt) => {
+  if (evt.key === Keys.ENTER_KEY && evt.target.classList.contains('map__pin--main')) {
+    getCoordinatesAfterActivate();
+    enabledForm();
+  }
+};
+
+mapPinMain.addEventListener('mousedown', onMousedown);
+document.addEventListener('keydown', onKeyPressEnter);
+
+const checkCapacity = () => {
+  let roomsValue = Number(rooms.value);
+  let capacityValue = Number(capacity.value);
+
+  if (roomsValue < capacityValue) {
+    capacity.setCustomValidity('Количество гостей может быть не больше количества комнат');
+  } else if (roomsValue === 100 && capacityValue !== 0) {
+    capacity.setCustomValidity('Такое количество комнат не для гостей');
+  } else if (roomsValue !== 100 && capacityValue === 0) {
+    capacity.setCustomValidity('Этот вариант подходит только для 100 комнат');
+  } else {
+    capacity.setCustomValidity('');
+  };
+};
+
+rooms.addEventListener('change', function () {
+  checkCapacity();
+  capacity.reportValidity();
+});
+
+capacity.addEventListener('change', function () {
+  checkCapacity();
+  capacity.reportValidity();
+});
+
+
+
+
 
