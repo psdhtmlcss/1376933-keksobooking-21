@@ -26,7 +26,9 @@ const mapPinTemplate = document.querySelector('#pin').content.querySelector('.ma
 const mapPins = document.querySelector('.map__pins');
 const mapPinMain = mapPins.querySelector('.map__pin--main');
 const mapFilters = document.querySelector('.map__filters');
+const mapFiltersElements = mapFilters.querySelectorAll('.map__filter');
 const adForm = document.querySelector('.ad-form');
+const adFormElements = adForm.querySelectorAll('.ad-form__element');
 const inputAddress = adForm.querySelector('#address');
 const rooms = adForm.querySelector('select[name="rooms"]');
 const capacity = adForm.querySelector('select[name="capacity"]');
@@ -112,20 +114,23 @@ const createMapPinsFragment = () => {
 
 // createMapPinsFragment();
 
-// Disabled elements
-const disabledForm = (form, isTrue) => {
-  let formElements = form.children;
-  if (!isTrue) {
-    form.classList.remove('ad-form--disabled');
-    map.classList.remove('map--faded');
+const disabledForm = (elements, isTrue) => {
+  for (let i = 0; i < elements.length; i++) {
+    elements[i].disabled = isTrue;
   };
-  for (let i = 0; i < formElements.length; i++) {
-    formElements[i].disabled = isTrue;
-  }
 };
 
-disabledForm(mapFilters, true);
-disabledForm(adForm, true);
+disabledForm(mapFiltersElements, true);
+disabledForm(adFormElements, true);
+
+const enabledForm = () => {
+  disabledForm(mapFilters, false);
+  disabledForm(adForm, false);
+  adForm.classList.remove('ad-form--disabled');
+  map.classList.remove('map--faded');
+  mapPinMain.removeEventListener('mousedown', onMousedown);
+  document.removeEventListener('keydown', onKeyPressEnter);
+};
 
 const getInitialCoordinates = () => {
   inputAddress.value = `${Math.floor(mapPinMain.offsetTop - MapPin.MAIN_WIDTH / 2)}, ${Math.floor(mapPinMain.offsetLeft - MapPin.MAIN_WIDTH / 2)}`;
@@ -137,49 +142,37 @@ const getCoordinatesAfterActivate = () => {
   inputAddress.value = `${Math.floor(mapPinMain.offsetTop - MapPin.MAIN_HEIGHT)}, ${Math.floor(mapPinMain.offsetLeft - MapPin.MAIN_WIDTH / 2)}`;
 };
 
-mapPinMain.addEventListener('mousedown', function(evt) {
+const onMousedown = (evt) => {
   if (evt.button === Mouse.LEFT_KEY_BUTTON) {
-    disabledForm(mapFilters, false);
-    disabledForm(adForm, false);
     getCoordinatesAfterActivate();
+    enabledForm();
   }
-});
+};
 
-document.addEventListener('keydown', function(evt) {
+const onKeyPressEnter = (evt) => {
   if (evt.key === Keys.ENTER_KEY && evt.target.classList.contains('map__pin--main')) {
-    disabledForm(mapFilters, false);
-    disabledForm(adForm, false);
     getCoordinatesAfterActivate();
+    enabledForm();
   }
-});
+};
+
+mapPinMain.addEventListener('mousedown', onMousedown);
+document.addEventListener('keydown', onKeyPressEnter);
 
 const checkCapacity = () => {
-  if (rooms.value === '1') {
-    if (capacity.value === '3' || capacity.value === '2' || capacity.value === '0') {
-      capacity.setCustomValidity('Для одной комнаты можно выбрать только одного гостя!');
-    } else {
-      capacity.setCustomValidity('');
-    }
-  } else if (rooms.value === '2') {
-    if (capacity.value === '3' || capacity.value === '0') {
-      capacity.setCustomValidity('Для двух комнат можно выбрать только одного или два гостя!');
-    } else {
-      capacity.setCustomValidity('');
-    }
-  } else if (rooms.value === '3') {
-    if (capacity.value === '0') {
-      capacity.setCustomValidity('Для трёх комнат можно выбрать только одного, два или три гостя!');
-    } else {
-      capacity.setCustomValidity('');
-    }
+  let roomsValue = Number(rooms.value);
+  let capacityValue = Number(capacity.value);
+
+  if (roomsValue < capacityValue) {
+    capacity.setCustomValidity('Количество гостей может быть не больше количества комнат');
+  } else if (roomsValue === 100 && capacityValue !== 0) {
+    capacity.setCustomValidity('Такое количество комнат не для гостей');
+  } else if (roomsValue !== 100 && capacityValue === 0) {
+    capacity.setCustomValidity('Этот вариант подходит только для 100 комнат');
   } else {
-    if (capacity.value === '1' || capacity.value === '2' || capacity.value === '3') {
-      capacity.setCustomValidity('Не для гостей');
-    } else {
-      capacity.setCustomValidity('');
-    }
+    capacity.setCustomValidity('');
   };
-}
+};
 
 rooms.addEventListener('change', function () {
   checkCapacity();
