@@ -1,10 +1,11 @@
 'use strict';
+const MAX_COUNT = 8;
+const map = document.querySelector('.map');
+
 (function () {
-  const MAX_COUNT = 8;
   const MAX_LOCATION = 1000;
   const LOCATION_Y_MIN = 130;
   const LOCATION_Y_MAX = 630;
-  const map = document.querySelector('.map');
   const similarAds = [];
   const types = ['palace', 'flat', 'house', 'bungalow'];
   const checkInOut = ['12:00', '13:00', '14:00'];

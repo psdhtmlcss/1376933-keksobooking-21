@@ -1,15 +1,16 @@
 'use strict';
+const PinProperties = {
+  WIDTH: 50,
+  HEIGHT: 70,
+  MAIN_WIDTH: 65,
+  MAIN_HEIGHT: 87
+};
+const pins = document.querySelector('.map__pins');
+
 (function () {
-  const MAX_COUNT = 8;
   const pinsFragment = document.createDocumentFragment();
   const pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
-  const pins = document.querySelector('.map__pins');
-  const PinProperties = {
-    WIDTH: 50,
-    HEIGHT: 70,
-    MAIN_WIDTH: 65,
-    MAIN_HEIGHT: 87
-  };
+
   const similarAds = window.data.getAds();
 
   const createPin = (pinsArray) => {

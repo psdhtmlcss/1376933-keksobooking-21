@@ -1,13 +1,5 @@
 'use strict';
 (function () {
-  const PinProperties = {
-    WIDTH: 50,
-    HEIGHT: 70,
-    MAIN_WIDTH: 65,
-    MAIN_HEIGHT: 87
-  };
-  const map = document.querySelector('.map');
-  const pins = document.querySelector('.map__pins');
   const pinMain = pins.querySelector('.map__pin--main');
   const mapFilters = document.querySelector('.map__filters');
   const adForm = document.querySelector('.ad-form');
@@ -31,14 +23,14 @@
     },
 
     enabledForm: function () {
-      window.form.disabledForm(mapFilters, false);
-      window.form.disabledForm(adForm, false);
-      window.form.getCoordinatesAfterActivate();
-      window.pins.createPinsFragment();
       adForm.classList.remove('ad-form--disabled');
       map.classList.remove('map--faded');
       pinMain.removeEventListener('mousedown', onMousedown);
       document.removeEventListener('keydown', onKeyPressEnter);
+      window.form.disabledForm(mapFilters, false);
+      window.form.disabledForm(adForm, false);
+      window.form.getCoordinatesAfterActivate();
+      window.pins.createPinsFragment();
     }
   };
 
