@@ -1,5 +1,5 @@
 'use strict';
-(function() {
+(function () {
   const MAX_COUNT = 8;
   const MAX_LOCATION = 1000;
   const LOCATION_Y_MIN = 130;
@@ -20,8 +20,6 @@
   };
 
   const photos = getPhotos();
-
-
 
   window.data = {
     getAds: function () {
@@ -49,10 +47,9 @@
               'y': window.util.getRandom(LOCATION_Y_MIN, LOCATION_Y_MAX)
             }
           }
-        )
+        );
       };
+      return similarAds;
     }
-  }
+  };
 })();
-
-console.log(window.data.getAds());
