@@ -1,46 +1,50 @@
 'use strict';
 (function () {
-  const pinMain = pins.querySelector('.map__pin--main');
-  const mapFilters = document.querySelector('.map__filters');
+  const pinMain = window.pins.pins.querySelector('.map__pin--main');
   const adForm = document.querySelector('.ad-form');
+  const formElements = document.querySelectorAll('.ad-form__element, .map__filter, .map__features');
   const inputAddress = adForm.querySelector('#address');
   const rooms = adForm.querySelector('select[name="rooms"]');
   const capacity = adForm.querySelector('select[name="capacity"]');
 
-  window.form = {
-    disabledForm: function (elements, isTrue) {
-      for (let i = 0; i < elements.length; i++) {
-        elements[i].disabled = isTrue;
-      };
-    },
-
-    getInitialCoordinates: function () {
-      inputAddress.value = `${Math.floor(pinMain.offsetTop - PinProperties.MAIN_WIDTH / 2)}, ${Math.floor(pinMain.offsetLeft - PinProperties.MAIN_WIDTH / 2)}`;
-    },
-
-    getCoordinatesAfterActivate: function () {
-      inputAddress.value = `${Math.floor(pinMain.offsetTop - PinProperties.MAIN_HEIGHT)}, ${Math.floor(pinMain.offsetLeft - PinProperties.MAIN_WIDTH / 2)}`;
-    },
-
-    enabledForm: function () {
-      adForm.classList.remove('ad-form--disabled');
-      map.classList.remove('map--faded');
-      pinMain.removeEventListener('mousedown', onMousedown);
-      document.removeEventListener('keydown', onKeyPressEnter);
-      window.form.disabledForm(mapFilters, false);
-      window.form.disabledForm(adForm, false);
-      window.form.getCoordinatesAfterActivate();
-      window.pins.createPinsFragment();
+  const getCoordinates = () => {
+    let height;
+    if (window.data.map.classList.contains('map--faded')) {
+      height = window.pins.PinProperties.MAIN_WIDTH / 2;
+    } else {
+      height = window.pins.PinProperties.MAIN_HEIGHT;
     }
+
+    inputAddress.value = `${Math.floor(pinMain.offsetLeft + height)}, ${Math.floor(pinMain.offsetTop + height)}`;
+  };
+
+  getCoordinates();
+
+  const toggleForm = (elements) => {
+    elements.forEach(function (value) {
+      value.disabled = !value.disabled;
+    });
+  };
+
+  toggleForm(formElements);
+
+  const enabledForm = () => {
+    adForm.classList.remove('ad-form--disabled');
+    window.data.map.classList.remove('map--faded');
+    pinMain.removeEventListener('mousedown', onMousedown);
+    document.removeEventListener('keydown', onKeyPressEnter);
+    toggleForm(formElements);
+    getCoordinates();
+    window.pins.createPinsFragment();
   };
 
   const onMousedown = (evt) => {
-    window.util.isOnMousedown(evt, window.form.enabledForm);
+    window.util.isOnMousedown(evt, enabledForm);
   };
 
   const onKeyPressEnter = (evt) => {
     if (evt.target.classList.contains('map__pin--main')) {
-      window.util.isPressEnter(evt, window.form.enabledForm);
+      window.util.isPressEnter(evt, enabledForm);
     }
   };
 
@@ -48,8 +52,8 @@
   document.addEventListener('keydown', onKeyPressEnter);
 
   const checkCapacity = () => {
-    let roomsValue = Number(rooms.value);
-    let capacityValue = Number(capacity.value);
+    let roomsValue = parseInt(rooms.value, 10);
+    let capacityValue = parseInt(capacity.value, 10);
 
     if (roomsValue < capacityValue) {
       capacity.setCustomValidity('Количество гостей может быть не больше количества комнат');
