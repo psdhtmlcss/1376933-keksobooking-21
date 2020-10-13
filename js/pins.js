@@ -15,8 +15,8 @@
   const createPin = (pinsArray) => {
     let pin = pinTemplate.cloneNode(true);
     let img = pin.querySelector('img');
-    pin.style.left = `${pinsArray.location.x + PinProperties.WIDTH / 2}px`;
-    pin.style.top = `${pinsArray.location.y + PinProperties.HEIGHT}px`;
+    pin.style.left = `${pinsArray.location.x - PinProperties.WIDTH / 2}px`;
+    pin.style.top = `${pinsArray.location.y - PinProperties.HEIGHT}px`;
     img.src = pinsArray.author.avatar;
     img.alt = pinsArray.offer.title;
 
