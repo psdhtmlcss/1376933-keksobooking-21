@@ -38,6 +38,37 @@
         evt.preventDefault();
         action();
       }
+    },
+
+    returnDeclination: function (num, decOne, decTwo, decThree) {
+      let result = '';
+      let str = num.toString();
+      let lastSymbol = str[str.length - 1];
+      let penultimateSymbol = str[str.length - 2];
+
+      if (num < 10) {
+        if (num === 1) {
+          result = `${num} ${decOne}`;
+        };
+
+        if (num > 1 && num < 5) {
+          result = `${num} ${decTwo}`;
+        };
+
+        if (num > 4 || num === 0) {
+          result = `${num} ${decThree}`;
+        };
+      } else {
+        if (lastSymbol === '1' && penultimateSymbol !== '1') {
+          result = `${num} ${decOne}`;
+        } else if (lastSymbol > '1' && lastSymbol < '5' && penultimateSymbol !== '1') {
+          result = `${num} ${decTwo}`;
+        } else {
+          result = `${num} ${decThree}`;
+        }
+      }
+
+      return result;
     }
   };
 })();

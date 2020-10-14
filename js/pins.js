@@ -34,6 +34,7 @@
   window.pins = {
     PinProperties: PinProperties,
     pins: pins,
+    similarAds: similarAds,
     createPinsFragment: createPinsFragment
   };
 })();
