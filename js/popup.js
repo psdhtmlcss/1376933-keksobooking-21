@@ -8,44 +8,26 @@
   const mapFilterContainer = window.data.map.querySelector('.map__filters-container');
   const firstAd = window.pins.similarAds[0];
 
-  // Определяем тип жилья
-  const getType = (type) => {
-    switch (type) {
-      case 'house':
-        type = 'Дом';
-        break;
-
-      case 'flat':
-        type = 'Квартира';
-        break;
-
-      case 'bungalow':
-        type = 'Бунгало';
-        break;
-
-      case 'palace':
-        type = 'Дворец'
-    }
-
-    return type;
+  const types = {
+    'house': 'Дом',
+    'flat': 'Квартира',
+    'bungalow': 'Бунгало',
+    'palace': 'Дворец'
   };
-
 
   // Добавляем удобства
   const fillFeatures = () => {
     let elements = popupFeatures.querySelectorAll('.popup__feature');
     if (firstAd.offer.features.length !== 0) {
       for (let i = 0; i < firstAd.offer.features.length; i++) {
-        for (let j = 0; j < elements.length; j++) {
-          if (elements[j].classList.contains(`popup__feature--${firstAd.offer.features[i]}`)) {
-            elements[j].textContent = firstAd.offer.features[i];
-          }
-        };
+        let li = document.createElement('li');
+        li.className = `popup__feature popup__feature--${firstAd.offer.features[i]}`;
+        popupFeatures.appendChild(li);
       };
 
       for (let i = 0; i < elements.length; i++) {
         if (elements[i].textContent.length === 0) {
-          elements[i].style.display = 'none';
+          elements[i].remove();
         }
       };
     } else {
@@ -70,7 +52,6 @@
       };
 
       popupPhotos.appendChild(popupPhotosFragment);
-      // Нужно удалить из template первую картинку без адреса и оставить только склонированные
       popupPhotos.querySelector('.popup__photo:first-child').remove();
     } else {
       popupPhotos.style.display = 'none';
@@ -94,7 +75,7 @@
     title.textContent = popupsArray.offer.title;
     address.textContent = popupsArray.offer.address;
     price.textContent = `${popupsArray.offer.price}₽/ночь`;
-    type.textContent = getType(popupsArray.offer.type);
+    type.textContent = types[firstAd.offer.type];
     capacity.textContent = `${window.util.returnDeclination(popupsArray.offer.rooms, 'комната', 'команаты', 'комнат')} для ${window.util.returnDeclination(popupsArray.offer.guests, 'гостя', 'гостей', 'гостей')}`;
     checkInOut.textContent = `Заезд после ${popupsArray.offer.checkin} выезд до ${popupsArray.offer.checkout}`;
     popupsArray.offer.description.length !== 0 ? description.textContent = popupsArray.offer.description : description.style.display = 'none';

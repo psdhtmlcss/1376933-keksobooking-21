@@ -19,8 +19,7 @@
       let x;
       for (i = a.length - 1; i > 0; i--) {
         j = Math.floor(Math.random() * (i + 1));
-        x = a[i];
-        a[j] = x;
+        [a[i], a[j]] = [a[j], a[i]];
       }
 
       return a;
@@ -41,34 +40,24 @@
     },
 
     returnDeclination: function (num, decOne, decTwo, decThree) {
-      let result = '';
-      let str = num.toString();
-      let lastSymbol = str[str.length - 1];
-      let penultimateSymbol = str[str.length - 2];
-
-      if (num < 10) {
-        if (num === 1) {
-          result = `${num} ${decOne}`;
-        };
-
-        if (num > 1 && num < 5) {
-          result = `${num} ${decTwo}`;
-        };
-
-        if (num > 4 || num === 0) {
-          result = `${num} ${decThree}`;
-        };
+      let str;
+      if (num > 10 && (Math.round((num % 100) / 10)) == 1) {
+        str = decTwo;
       } else {
-        if (lastSymbol === '1' && penultimateSymbol !== '1') {
-          result = `${num} ${decOne}`;
-        } else if (lastSymbol > '1' && lastSymbol < '5' && penultimateSymbol !== '1') {
-          result = `${num} ${decTwo}`;
-        } else {
-          result = `${num} ${decThree}`;
+        switch (num % 10) {
+          case 1:
+            str = decOne;
+            break;
+          case 2:
+          case 3:
+          case 4:
+            str = decThree;
+            break;
         }
-      }
+        str = decTwo;
+      };
 
-      return result;
+      return `${num} ${str}`;
     }
   };
 })();
