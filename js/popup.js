@@ -1,64 +1,43 @@
 'use strict';
 (function () {
   const popupTemplate = document.querySelector('#card').content.querySelector('.popup');
-  const popupFeatures = popupTemplate.querySelector('.popup__features');
-  const popupPhotos = popupTemplate.querySelector('.popup__photos');
-  const popupPhotosFragment = document.createDocumentFragment();
   const popupsFragment = document.createDocumentFragment();
+  const popupImg = popupTemplate.querySelector('.popup__photo');
+  const imgFragment = document.createDocumentFragment();
   const mapFilterContainer = window.data.map.querySelector('.map__filters-container');
-  const firstAd = window.pins.similarAds[0];
 
   const types = {
-    'house': 'Дом',
-    'flat': 'Квартира',
-    'bungalow': 'Бунгало',
-    'palace': 'Дворец'
+    'house': {ru: 'Дом', min: 0},
+    'flat': {ru: 'Квартира', min: 0},
+    'bungalow': {ru: 'Бунгало', min: 0} ,
+    'palace': {ru: 'Дворец', min: 0}
   };
 
-  const fillFeatures = () => {
-    let elements = popupFeatures.querySelectorAll('.popup__feature');
-    if (firstAd.offer.features.length !== 0) {
-      for (let i = 0; i < firstAd.offer.features.length + elements.length; i++) {
-        if (i < elements.length) {
-          elements[i].remove()
-        } else {
-          let li = document.createElement('li');
-          li.className = `popup__feature popup__feature--${firstAd.offer.features[i - elements.length]}`;
-          popupFeatures.appendChild(li);
-        }
-        
-      };
+  const fillFeatures = (options, features) => {
+    options.forEach(function (option, i) {
+      if (features.indexOf(option.classList[1].replace('popup__feature--', '')) < 0) {
+        options[i].remove();
+      }
+    });
+  };
+
+  const createPhotos = (array, place) => {
+    if (array.length > 0) {
+      let img;
+      array.forEach(function (value) {
+        img = popupImg.cloneNode();
+        img.src = value;
+        imgFragment.appendChild(img);
+      });
+      place.appendChild(imgFragment);
     } else {
-      popupFeatures.style.display = 'none';
+      place.remove();
     };
   };
 
-  fillFeatures();
-
-  const createPhotos = (photosArray) => {
-    let img = popupPhotos.querySelector('.popup__photo').cloneNode();
-    img.src = photosArray;
-
-    return img;
-  };
-
-  const createPopupsPhotosFragment = () => {
-    if (firstAd.offer.photos.length !== 0) {
-      for (let i = 0; i < firstAd.offer.photos.length; i++) {
-        popupPhotosFragment.appendChild(createPhotos(firstAd.offer.photos[i]));
-      };
-
-      popupPhotos.appendChild(popupPhotosFragment);
-      popupPhotos.querySelector('.popup__photo:first-child').remove();
-    } else {
-      popupPhotos.style.display = 'none';
-    }
-
-  };
-
-  createPopupsPhotosFragment();
-
-  const createPopup = (popupsArray) => {
+  const createPopup = (ad) => {
+    // Сначала удаляю элемент из шаблона, чтобы он не клонировался.
+    popupImg.remove();
     let popup = popupTemplate.cloneNode(true);
     let title = popup.querySelector('.popup__title');
     let address = popup.querySelector('.popup__text--address');
@@ -66,26 +45,37 @@
     let type = popup.querySelector('.popup__type');
     let capacity = popup.querySelector('.popup__text--capacity');
     let checkInOut = popup.querySelector('.popup__text--time');
+    let features = popup.querySelector('.popup__features');
+    let options = popup.querySelectorAll('.popup__feature');
     let description = popup.querySelector('.popup__description');
+    let photos = popup.querySelector('.popup__photos');
     let avatar = popup.querySelector('.popup__avatar');
 
-    title.textContent = popupsArray.offer.title;
-    address.textContent = popupsArray.offer.address;
-    price.textContent = `${popupsArray.offer.price}₽/ночь`;
-    type.textContent = types[firstAd.offer.type];
-    capacity.textContent = `${window.util.returnDeclination(popupsArray.offer.rooms, 'комната', 'команаты', 'комнат')} для ${window.util.returnDeclination(popupsArray.offer.guests, 'гостя', 'гостей', 'гостей')}`;
-    checkInOut.textContent = `Заезд после ${popupsArray.offer.checkin} выезд до ${popupsArray.offer.checkout}`;
-    popupsArray.offer.description.length !== 0 ? description.textContent = popupsArray.offer.description : description.style.display = 'none';
-    popupsArray.author.avatar.length !== 0 ? avatar.src = popupsArray.author.avatar : avatar.style.display = 'none';
+    title.textContent = ad.offer.title;
+    address.textContent = ad.offer.address;
+    price.textContent = `${ad.offer.price}₽/ночь`;
+    type.textContent = types[ad.offer.type].ru;
+    capacity.textContent = `${window.util.returnDeclination(ad.offer.rooms, 'комната', 'команаты', 'комнат')} для ${window.util.returnDeclination(ad.offer.guests, 'гостя', 'гостей', 'гостей')}`;
+    checkInOut.textContent = `Заезд после ${ad.offer.checkin} выезд до ${ad.offer.checkout}`;
+    ad.offer.description.length !== 0 ? description.textContent = ad.offer.description : description.remove();
+    ad.author.avatar.length !== 0 ? avatar.src = ad.author.avatar : avatar.remove();
 
-    return popup;
-  };
+    /* Условие для опций поставила здесь, так как нужно проверять в клонированном массиве.
+    В функции fillFeatures это условие не срабатывает, т.е. когда массив пустой, то из клона
+    функция не удаляет опции, она их удаляет из шаблона, поэтому в клоне все шесть остаются. */
+    ad.offer.features.length > 0 ? fillFeatures(options, ad.offer.features) : features.remove();
 
-  const createPopupsFragment = () => {
-    popupsFragment.appendChild(createPopup(firstAd));
+    // Фотки
+    createPhotos(ad.offer.photos, photos);
+    
+    popupsFragment.appendChild(popup);
     mapFilterContainer.prepend(popupsFragment);
+
+    return mapFilterContainer;
   };
 
-  createPopupsFragment();
+  window.popup = {
+    createPopup: createPopup
+  }
 
 })();
