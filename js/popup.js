@@ -15,29 +15,26 @@
     'palace': 'Дворец'
   };
 
-  // Добавляем удобства
   const fillFeatures = () => {
     let elements = popupFeatures.querySelectorAll('.popup__feature');
     if (firstAd.offer.features.length !== 0) {
-      for (let i = 0; i < firstAd.offer.features.length; i++) {
-        let li = document.createElement('li');
-        li.className = `popup__feature popup__feature--${firstAd.offer.features[i]}`;
-        popupFeatures.appendChild(li);
-      };
-
-      for (let i = 0; i < elements.length; i++) {
-        if (elements[i].textContent.length === 0) {
-          elements[i].remove();
+      for (let i = 0; i < firstAd.offer.features.length + elements.length; i++) {
+        if (i < elements.length) {
+          elements[i].remove()
+        } else {
+          let li = document.createElement('li');
+          li.className = `popup__feature popup__feature--${firstAd.offer.features[i - elements.length]}`;
+          popupFeatures.appendChild(li);
         }
+        
       };
     } else {
       popupFeatures.style.display = 'none';
-    }
+    };
   };
 
   fillFeatures();
 
-  // Добавляем фото
   const createPhotos = (photosArray) => {
     let img = popupPhotos.querySelector('.popup__photo').cloneNode();
     img.src = photosArray;
