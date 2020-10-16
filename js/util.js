@@ -19,8 +19,7 @@
       let x;
       for (i = a.length - 1; i > 0; i--) {
         j = Math.floor(Math.random() * (i + 1));
-        x = a[i];
-        a[j] = x;
+        [a[i], a[j]] = [a[j], a[i]];
       }
 
       return a;
@@ -38,6 +37,27 @@
         evt.preventDefault();
         action();
       }
+    },
+
+    returnDeclination: function (num, decOne, decTwo, decThree) {
+      let str;
+      if (num > 10 && (Math.round((num % 100) / 10)) == 1) {
+        str = decTwo;
+      } else {
+        switch (num % 10) {
+          case 1:
+            str = decOne;
+            break;
+          case 2:
+          case 3:
+          case 4:
+            str = decThree;
+            break;
+        }
+        str = decTwo;
+      };
+
+      return `${num} ${str}`;
     }
   };
 })();

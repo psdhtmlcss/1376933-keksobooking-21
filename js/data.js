@@ -1,6 +1,7 @@
 'use strict';
 (function () {
   const MAX_COUNT = 8;
+  const MAX_PHOTO = 3
   const map = document.querySelector('.map');
   const MAX_LOCATION = 1000;
   const LOCATION_Y_MIN = 130;
@@ -12,7 +13,7 @@
 
   const getPhotos = () => {
     let photos = [];
-    for (let i = 0; i < MAX_COUNT; i++) {
+    for (let i = 0; i < MAX_PHOTO; i++) {
       photos.push(`http://o0.github.io/assets/images/tokyo/hotel${i + 1}.jpg`);
     }
 
@@ -33,8 +34,8 @@
             'address': `${window.util.getRandom(1, MAX_LOCATION)}, ${1, MAX_LOCATION}`,
             'price': 0,
             'type': `${types[window.util.getRandom(0, types.length - 1)]}`,
-            'rooms': 1,
-            'capacity': 1,
+            'rooms': 3,
+            'guests': 2,
             'checkin': `${checkInOut[window.util.getRandom(0, checkInOut.length - 1)]}`,
             'checkout': `${checkInOut[window.util.getRandom(0, checkInOut.length - 1)]}`,
             'features': window.util.shaffleArray(features).slice(0, window.util.getRandom(0, features.length)),

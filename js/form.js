@@ -36,6 +36,7 @@
     toggleForm(formElements);
     getCoordinates();
     window.pins.createPinsFragment();
+    window.popup.createPopup(window.pins.similarAds[0]);
   };
 
   const onMousedown = (evt) => {
