@@ -6,6 +6,7 @@
     MAIN_WIDTH: 65,
     MAIN_HEIGHT: 87
   };
+
   const pins = document.querySelector('.map__pins');
   const pinsFragment = document.createDocumentFragment();
   const pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
@@ -15,6 +16,7 @@
   const createPin = (pinsArray) => {
     let pin = pinTemplate.cloneNode(true);
     let img = pin.querySelector('img');
+    img.addEventListener('click', window.popup.onClickMapPin);
     pin.style.left = `${pinsArray.location.x - PinProperties.WIDTH / 2}px`;
     pin.style.top = `${pinsArray.location.y - PinProperties.HEIGHT}px`;
     img.src = pinsArray.author.avatar;

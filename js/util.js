@@ -4,7 +4,8 @@
     LEFT_KEY_BUTTON: 0
   };
   const Keys = {
-    ENTER_KEY: 'Enter'
+    ENTER_KEY: 'Enter',
+    ESCAPE_KEY: 'Escape'
   };
 
   window.util = {
@@ -34,6 +35,13 @@
 
     isPressEnter: function (evt, action) {
       if (evt.key === Keys.ENTER_KEY) {
+        evt.preventDefault();
+        action();
+      }
+    },
+
+    isPressEscape: function (evt, action) {
+      if (evt.key === Keys.ESCAPE_KEY) {
         evt.preventDefault();
         action();
       }

@@ -6,6 +6,16 @@
   const inputAddress = adForm.querySelector('#address');
   const rooms = adForm.querySelector('select[name="rooms"]');
   const capacity = adForm.querySelector('select[name="capacity"]');
+  const timeIn = adForm.querySelector('select[name="timein"]');
+  const timeOut = adForm.querySelector('select[name="timeout"]');
+  const type = adForm.querySelector('select[name="type"]');
+  const price = adForm.querySelector('#price');
+  const types = {
+    'bungalow': { ru: 'Бунгало', min: 0 },
+    'flat': { ru: 'Квартира', min: 1000 },
+    'house': { ru: 'Дом', min: 5000 },
+    'palace': { ru: 'Дворец', min: 10000 }
+  };
 
   const getCoordinates = () => {
     let height;
@@ -33,10 +43,10 @@
     window.data.map.classList.remove('map--faded');
     pinMain.removeEventListener('mousedown', onMousedown);
     document.removeEventListener('keydown', onKeyPressEnter);
+    document.addEventListener('keydown', window.popup.onEnterMapPin);
     toggleForm(formElements);
     getCoordinates();
     window.pins.createPinsFragment();
-    window.popup.createPopup(window.pins.similarAds[0]);
   };
 
   const onMousedown = (evt) => {
@@ -67,6 +77,12 @@
     };
   };
 
+  // Validation
+  type.addEventListener('change', function () {
+    price.min = types[type.value].min;
+    price.placeholder = types[type.value].min;
+  });
+
   rooms.addEventListener('change', function () {
     checkCapacity();
     capacity.reportValidity();
@@ -76,4 +92,16 @@
     checkCapacity();
     capacity.reportValidity();
   });
+
+  timeIn.addEventListener('change', function () {
+    timeOut.value = timeIn.value;
+  });
+
+  timeOut.addEventListener('change', function () {
+    timeIn.value = timeOut.value;
+  });
+
+  window.form = {
+    types: types
+  }
 })();
