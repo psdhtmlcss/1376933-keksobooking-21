@@ -3,7 +3,8 @@
   const MAX_COUNT = 8;
   const MAX_PHOTO = 3
   const map = document.querySelector('.map');
-  const MAX_LOCATION = 1000;
+  const LOCATION_X_MIN = 0;
+  const LOCATION_X_MAX = 1200;
   const LOCATION_Y_MIN = 130;
   const LOCATION_Y_MAX = 630;
   const similarAds = [];
@@ -31,7 +32,7 @@
           },
           'offer': {
             'title': `Заголовок ${i + 1}`,
-            'address': `${window.util.getRandom(1, MAX_LOCATION)}, ${1, MAX_LOCATION}`,
+            'address': `${window.util.getRandom(1, LOCATION_X_MAX)}, ${1, LOCATION_X_MAX}`,
             'price': 0,
             'type': `${types[window.util.getRandom(0, types.length - 1)]}`,
             'rooms': 3,
@@ -54,6 +55,10 @@
 
   window.data = {
     MAX_COUNT: MAX_COUNT,
+    LOCATION_X_MIN: LOCATION_X_MIN,
+    LOCATION_X_MAX: LOCATION_X_MAX,
+    LOCATION_Y_MIN: LOCATION_Y_MIN,
+    LOCATION_Y_MAX: LOCATION_Y_MAX,
     map: map,
     getAds: getAds
   };
