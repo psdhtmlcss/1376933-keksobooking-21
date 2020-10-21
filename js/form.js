@@ -25,7 +25,7 @@
       height = window.pins.PinProperties.MAIN_HEIGHT;
     }
 
-    inputAddress.value = `${Math.floor(pinMain.offsetLeft + height)}, ${Math.floor(pinMain.offsetTop + height)}`;
+    inputAddress.value = `${Math.floor(pinMain.offsetLeft + window.pins.PinProperties.MAIN_WIDTH / 2)}, ${Math.floor(pinMain.offsetTop + height)}`;
   };
 
   getCoordinates();
@@ -43,7 +43,6 @@
     window.data.map.classList.remove('map--faded');
     pinMain.removeEventListener('mousedown', onMousedown);
     document.removeEventListener('keydown', onKeyPressEnter);
-    document.addEventListener('keydown', window.popup.onEnterMapPin);
     toggleForm(formElements);
     getCoordinates();
     window.pins.createPinsFragment();

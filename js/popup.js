@@ -43,8 +43,6 @@
     let photos = popup.querySelector('.popup__photos');
     let avatar = popup.querySelector('.popup__avatar');
 
-    document.addEventListener('keydown', onClickCloseBtn);
-
     title.textContent = ad.offer.title;
     address.textContent = ad.offer.address;
     price.textContent = `${ad.offer.price}₽/ночь`;
@@ -53,71 +51,34 @@
     checkInOut.textContent = `Заезд после ${ad.offer.checkin} выезд до ${ad.offer.checkout}`;
     ad.offer.description.length !== 0 ? description.textContent = ad.offer.description : description.remove();
     ad.author.avatar.length !== 0 ? avatar.src = ad.author.avatar : avatar.remove();
-    closeBtn.addEventListener('click', closePopup);
     ad.offer.features.length > 0 ? fillFeatures(options, ad.offer.features) : features.remove();
     createPhotos(ad.offer.photos, photos);
     window.pins.pins.after(popup);
+
+    document.addEventListener('keydown', onCloseBtnClick);
+    closeBtn.addEventListener('click', closePopup);
 
     return popup;
 
   };
 
-  const removeClass = () => {
-    let card = map.querySelector('.map__card');
-    window.pins.pins.querySelectorAll('.map__pin').forEach(function (pin) {
-      pin.classList.remove('map__pin--active');
-      if (card) {
-        card.remove();
-      }
-    });
-  };
-
-  const onClickMapPin = (evt) => {
-    let pinActive = evt.target.parentNode;
-    removeClass();
-    if (!pinActive.classList.contains('map__pin--main')) {
-      pinActive.classList.add('map__pin--active');
-    };
-    showPopup();
-  };
-
-  const onEnterMapPin = (evt) => {
-    let pinActive = evt.target;
-    let addClass = () => {
-      if (evt.target.classList.contains('map__pin') && !evt.target.classList.contains('map__pin--main')) {
-        removeClass();
-        pinActive.classList.add('map__pin--active');
-        showPopup();
-      }
-    };
-    window.util.isPressEnter(evt, addClass);
-
-  };
-
-  const showPopup = () => {
-    window.pins.pins.querySelectorAll('.map__pin').forEach(function (pin, i) {
-      if (pin.classList.contains('map__pin--active')) {
-        createPopup(window.pins.similarAds[i - 1]);
-      };
-    });
-  };
-
   const closePopup = () => {
-    let card = map.querySelector('.map__card');
-    window.pins.pins.querySelectorAll('.map__pin').forEach(function (pin) {
-      pin.classList.remove('map__pin--active');
-    });
-    card.remove();
-    document.removeEventListener('keydown', onClickCloseBtn);
+    let card = map.querySelector('.popup');
+    // Нужно еще удалить активный класс у карточки
+    window.pins.removeActiveClass();
+    if (card) {
+      card.remove();
+      document.removeEventListener('keydown', onCloseBtnClick);
+    }
   };
 
-  const onClickCloseBtn = (evt) => {
+  const onCloseBtnClick = (evt) => {
     window.util.isPressEscape(evt, closePopup);
   };
 
   window.popup = {
-    onClickMapPin: onClickMapPin,
-    onEnterMapPin: onEnterMapPin
+    create: createPopup,
+    close: closePopup
   };
 
 })();
