@@ -4,10 +4,14 @@
     LEFT_KEY_BUTTON: 0
   };
   const Keys = {
-    ENTER_KEY: 'Enter'
+    ENTER_KEY: 'Enter',
+    ESCAPE_KEY: 'Escape'
   };
 
   window.util = {
+    Mouse: Mouse,
+    Keys: Keys,
+
     getRandom: function (min, max) {
       let x = Math.floor(Math.random() * (max - min) + min);
       return x;
@@ -16,7 +20,6 @@
     shaffleArray: function (a) {
       let i;
       let j;
-      let x;
       for (i = a.length - 1; i > 0; i--) {
         j = Math.floor(Math.random() * (i + 1));
         [a[i], a[j]] = [a[j], a[i]];
@@ -34,6 +37,13 @@
 
     isPressEnter: function (evt, action) {
       if (evt.key === Keys.ENTER_KEY) {
+        evt.preventDefault();
+        action();
+      }
+    },
+
+    isPressEscape: function (evt, action) {
+      if (evt.key === Keys.ESCAPE_KEY) {
         evt.preventDefault();
         action();
       }
