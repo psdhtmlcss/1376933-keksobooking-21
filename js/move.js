@@ -5,6 +5,7 @@
     window.form.pinMain.addEventListener('mousedown', function (evt) {
       evt.preventDefault();
 
+
       let startCoordinates = {
         x: evt.clientX,
         y: evt.clientY
@@ -12,6 +13,10 @@
 
       const onMouseMove = (moveEvt) => {
         moveEvt.preventDefault();
+
+        if (window.data.map.classList.contains('map--faded')) {
+          window.form.enabledForm();
+        };
 
         let shift = {
           x: startCoordinates.x - moveEvt.clientX,
@@ -25,14 +30,18 @@
 
         window.form.pinMain.style.top = (window.form.pinMain.offsetTop - shift.y) + 'px';
         window.form.pinMain.style.left = (window.form.pinMain.offsetLeft - shift.x) + 'px';
-        window.form.getCoordinates();
+        window.form.setCoordinates();
 
       };
 
       const onMouseUp = (upEvt) => {
         upEvt.preventDefault();
 
-        window.form.getCoordinates();
+        if (window.data.map.classList.contains('map--faded')) {
+          window.form.enabledForm();
+        };
+
+        window.form.setCoordinates();
 
         document.removeEventListener('mousemove', onMouseMove);
         document.removeEventListener('mouseup', onMouseUp);
@@ -43,7 +52,5 @@
     });
   };
 
-  window.move = {
-    moveMainPin: moveMainPin
-  }
+  moveMainPin();
 })();

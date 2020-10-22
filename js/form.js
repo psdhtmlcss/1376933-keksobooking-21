@@ -17,7 +17,7 @@
     'palace': { ru: 'Дворец', min: 10000 }
   };
 
-  const getCoordinates = () => {
+  const setCoordinates = () => {
     let leftPoint = Math.floor(window.data.LOCATION_X_MIN - window.pins.PinProperties.MAIN_WIDTH / 2);
     let rightPoint = Math.floor(window.data.LOCATION_X_MAX - window.pins.PinProperties.MAIN_WIDTH / 2);
     let height;
@@ -53,7 +53,7 @@
     inputAddress.value = `${x}, ${y}`;
   };
 
-  getCoordinates();
+  setCoordinates();
 
   const toggleForm = (elements) => {
     elements.forEach(function (value) {
@@ -66,16 +66,10 @@
   const enabledForm = () => {
     adForm.classList.remove('ad-form--disabled');
     window.data.map.classList.remove('map--faded');
-    pinMain.removeEventListener('mousedown', onMousedown);
     document.removeEventListener('keydown', onKeyPressEnter);
     toggleForm(formElements);
-    getCoordinates();
+    setCoordinates();
     window.pins.createPinsFragment();
-    window.move.moveMainPin();
-  };
-
-  const onMousedown = (evt) => {
-    window.util.isOnMousedown(evt, enabledForm);
   };
 
   const onKeyPressEnter = (evt) => {
@@ -84,7 +78,6 @@
     }
   };
 
-  pinMain.addEventListener('mousedown', onMousedown);
   document.addEventListener('keydown', onKeyPressEnter);
 
   const checkCapacity = () => {
@@ -129,6 +122,7 @@
   window.form = {
     types: types,
     pinMain: pinMain,
-    getCoordinates: getCoordinates
+    setCoordinates: setCoordinates,
+    enabledForm: enabledForm
   }
 })();

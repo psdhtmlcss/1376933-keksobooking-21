@@ -67,7 +67,7 @@
     window.pins.removeActiveClass();
     if (card) {
       card.remove();
-      document.removeEventListener('keydown', onCloseBtnClick);
+      document.removeEventListener('keydown', onKeyPressEscape);
     }
   };
 
