@@ -55,7 +55,7 @@
     createPhotos(ad.offer.photos, photos);
     window.pins.pins.after(popup);
 
-    document.addEventListener('keydown', onCloseBtnClick);
+    document.addEventListener('keydown', onKeyPressEscape);
     closeBtn.addEventListener('click', closePopup);
 
     return popup;
@@ -64,7 +64,6 @@
 
   const closePopup = () => {
     let card = map.querySelector('.popup');
-    // Нужно еще удалить активный класс у карточки
     window.pins.removeActiveClass();
     if (card) {
       card.remove();
@@ -72,7 +71,7 @@
     }
   };
 
-  const onCloseBtnClick = (evt) => {
+  const onKeyPressEscape = (evt) => {
     window.util.isPressEscape(evt, closePopup);
   };
 
