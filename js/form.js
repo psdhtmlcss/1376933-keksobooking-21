@@ -17,18 +17,43 @@
     'palace': { ru: 'Дворец', min: 10000 }
   };
 
-  const getCoordinates = () => {
+  const setCoordinates = () => {
+    let leftPoint = Math.floor(window.data.LOCATION_X_MIN - window.pins.PinProperties.MAIN_WIDTH / 2);
+    let rightPoint = Math.floor(window.data.LOCATION_X_MAX - window.pins.PinProperties.MAIN_WIDTH / 2);
     let height;
+    let x;
+    let y;
+
     if (window.data.map.classList.contains('map--faded')) {
       height = window.pins.PinProperties.MAIN_WIDTH / 2;
     } else {
       height = window.pins.PinProperties.MAIN_HEIGHT;
-    }
+    };
 
-    inputAddress.value = `${Math.floor(pinMain.offsetLeft + window.pins.PinProperties.MAIN_WIDTH / 2)}, ${Math.floor(pinMain.offsetTop + height)}`;
+    if (pinMain.offsetLeft <= leftPoint) {
+      x = window.data.LOCATION_X_MIN;
+      pinMain.style.left = leftPoint + 'px';
+    } else if (pinMain.offsetLeft >= rightPoint) {
+      x = window.data.LOCATION_X_MAX;
+      pinMain.style.left = rightPoint + 'px';
+    } else {
+      x = Math.floor(pinMain.offsetLeft + window.pins.PinProperties.MAIN_WIDTH / 2);
+    };
+
+    if (pinMain.offsetTop <= window.data.LOCATION_Y_MIN) {
+      y = window.data.LOCATION_Y_MIN;
+      pinMain.style.top = window.data.LOCATION_Y_MIN + 'px';
+    } else if (pinMain.offsetTop >= window.data.LOCATION_Y_MAX) {
+      y = window.data.LOCATION_Y_MAX;
+      pinMain.style.top = window.data.LOCATION_Y_MAX + 'px';
+    } else {
+      y = Math.floor(pinMain.offsetTop + height);
+    };
+
+    inputAddress.value = `${x}, ${y}`;
   };
 
-  getCoordinates();
+  setCoordinates();
 
   const toggleForm = (elements) => {
     elements.forEach(function (value) {
@@ -41,15 +66,10 @@
   const enabledForm = () => {
     adForm.classList.remove('ad-form--disabled');
     window.data.map.classList.remove('map--faded');
-    pinMain.removeEventListener('mousedown', onMousedown);
     document.removeEventListener('keydown', onKeyPressEnter);
     toggleForm(formElements);
-    getCoordinates();
+    setCoordinates();
     window.pins.createPinsFragment();
-  };
-
-  const onMousedown = (evt) => {
-    window.util.isOnMousedown(evt, enabledForm);
   };
 
   const onKeyPressEnter = (evt) => {
@@ -58,7 +78,6 @@
     }
   };
 
-  pinMain.addEventListener('mousedown', onMousedown);
   document.addEventListener('keydown', onKeyPressEnter);
 
   const checkCapacity = () => {
@@ -101,6 +120,9 @@
   });
 
   window.form = {
-    types: types
+    types: types,
+    pinMain: pinMain,
+    setCoordinates: setCoordinates,
+    enabledForm: enabledForm
   }
 })();
