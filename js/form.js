@@ -1,7 +1,7 @@
 'use strict';
 (function () {
-  const pinMain = window.pins.pins.querySelector('.map__pin--main');
   const adForm = document.querySelector('.ad-form');
+  const btnReset = adForm.querySelector('.ad-form__reset');
   const formElements = document.querySelectorAll('.ad-form__element, .map__filter, .map__features');
   const inputAddress = adForm.querySelector('#address');
   const rooms = adForm.querySelector('select[name="rooms"]');
@@ -31,30 +31,28 @@
       height = window.pins.Properties.MAIN_HEIGHT;
     };
 
-    if (pinMain.offsetLeft <= leftPoint) {
+    if (window.pins.main.offsetLeft <= leftPoint) {
       x = window.pins.LOCATION_X_MIN;
-      pinMain.style.left = leftPoint + 'px';
-    } else if (pinMain.offsetLeft >= rightPoint) {
+      window.pins.main.style.left = leftPoint + 'px';
+    } else if (window.pins.main.offsetLeft >= rightPoint) {
       x = window.pins.LOCATION_X_MAX;
-      pinMain.style.left = rightPoint + 'px';
+      window.pins.main.style.left = rightPoint + 'px';
     } else {
-      x = Math.floor(pinMain.offsetLeft + window.pins.Properties.MAIN_WIDTH / 2);
+      x = Math.floor(window.pins.main.offsetLeft + window.pins.Properties.MAIN_WIDTH / 2);
     };
 
-    if (pinMain.offsetTop <= window.pins.LOCATION_Y_MIN) {
+    if (window.pins.main.offsetTop <= window.pins.LOCATION_Y_MIN) {
       y = window.pins.LOCATION_Y_MIN;
-      pinMain.style.top = window.pins.LOCATION_Y_MIN + 'px';
-    } else if (pinMain.offsetTop >= bottomPoint) {
+      window.pins.main.style.top = window.pins.LOCATION_Y_MIN + 'px';
+    } else if (window.pins.main.offsetTop >= bottomPoint) {
       y = window.pins.LOCATION_Y_MAX;
-      pinMain.style.top = bottomPoint + 'px';
+      window.pins.main.style.top = bottomPoint + 'px';
     } else {
-      y = Math.floor(pinMain.offsetTop + height);
+      y = Math.floor(window.pins.main.offsetTop + height);
     };
 
     inputAddress.value = `${x}, ${y}`;
   };
-
-  setCoordinates();
 
   const toggleForm = (elements) => {
     elements.forEach(function (value) {
@@ -62,24 +60,40 @@
     });
   };
 
-  toggleForm(formElements);
+  const onSubmitForm = (evt) => {
+    evt.preventDefault();
+    window.load(null, null, new FormData(adForm), window.statusMessage.create);
+  };
 
   const enabledForm = () => {
     adForm.classList.remove('ad-form--disabled');
     window.pins.map.classList.remove('map--faded');
-    document.removeEventListener('keydown', onKeyPressEnter);
     toggleForm(formElements);
     setCoordinates();
-    // window.pins.create();
+    document.removeEventListener('keydown', onKeyPressEnter);
+    adForm.addEventListener('submit', onSubmitForm);
+    btnReset.addEventListener('click', disabledForm);
+  };
+
+  const disabledForm = () => {
+    adForm.classList.add('ad-form--disabled');
+    window.pins.map.classList.add('map--faded');
+    window.pins.remove();
+    window.popup.close();
+    toggleForm(formElements);
+    adForm.reset();
+    window.pins.mainResetPosition();
+    setCoordinates();
+    adForm.removeEventListener('submit', onSubmitForm);
+    btnReset.removeEventListener('click', disabledForm);
+    // Здесь также будет сброс фильтра
   };
 
   const onKeyPressEnter = (evt) => {
     if (evt.target.classList.contains('map__pin--main')) {
-      window.util.isPressEnter(evt, enabledForm);
+      window.util.isPressEnter(evt, window.pins.create);
     }
   };
-
-  document.addEventListener('keydown', onKeyPressEnter);
 
   const checkCapacity = () => {
     let roomsValue = parseInt(rooms.value, 10);
@@ -95,6 +109,11 @@
       capacity.setCustomValidity('');
     };
   };
+
+  toggleForm(formElements);
+  setCoordinates();
+
+  document.addEventListener('keydown', onKeyPressEnter);
 
   // Validation
   type.addEventListener('change', function () {
@@ -122,8 +141,8 @@
 
   window.form = {
     types: types,
-    pinMain: pinMain,
     setCoordinates: setCoordinates,
-    enabled: enabledForm
+    enabled: enabledForm,
+    disabled: disabledForm
   }
 })();
