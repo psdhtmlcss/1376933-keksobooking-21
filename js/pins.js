@@ -1,5 +1,11 @@
 'use strict';
 (function () {
+  const MAX_COUNT = 5;
+  const TIMEOUT_IN_MS = 3000;
+  const LOCATION_X_MIN = 0;
+  const LOCATION_X_MAX = 1200;
+  const LOCATION_Y_MIN = 130;
+  const LOCATION_Y_MAX = 630;
   const PinProperties = {
     WIDTH: 50,
     HEIGHT: 70,
@@ -11,8 +17,6 @@
   const pins = document.querySelector('.map__pins');
   const pinsFragment = document.createDocumentFragment();
   const pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
-
-  const similarAds = window.data.getAds();
 
   const setActiveClass = (pin) => {
     removeActiveClass();
@@ -47,19 +51,52 @@
     return pin;
   };
 
-  const createPinsFragment = () => {
-    for (let i = 0; i < window.data.MAX_COUNT; i++) {
+  const successHandler = (similarAds) => {
+    let calculateMaxCount = (maxCount) => {
+      if (similarAds.length > MAX_COUNT) {
+        maxCount = MAX_COUNT;
+      } else {
+        maxCount = similarAds.length;
+      };
+
+      return maxCount;
+    };
+
+    let maxCount = calculateMaxCount();
+
+    for (let i = 0; i < maxCount; i++) {
       pinsFragment.appendChild(createPin(similarAds[i]));
     };
 
     pins.appendChild(pinsFragment);
   };
 
+  const errorHandler = (errorMessage) => {
+    let node = document.createElement('div');
+    let removeNode = () => {
+      node.remove();
+    };
+    node.style = 'position: fixed; left: 0; top: 0; z-index: 100; width: 100%;  margin: 0 auto; padding: 10px; text-align: center; color: white; background-color: #ff5635;';
+    node.textContent = errorMessage;
+
+    document.body.insertAdjacentElement('afterbegin', node);
+
+    setTimeout(removeNode, TIMEOUT_IN_MS);
+  };
+
+  const createPinsFragment = () => {
+    window.load(successHandler, errorHandler);
+  };
+
   window.pins = {
-    PinProperties: PinProperties,
+    LOCATION_X_MIN: LOCATION_X_MIN,
+    LOCATION_X_MAX: LOCATION_X_MAX,
+    LOCATION_Y_MIN: LOCATION_Y_MIN,
+    LOCATION_Y_MAX: LOCATION_Y_MAX,
+    Properties: PinProperties,
     pins: pins,
-    similarAds: similarAds,
-    createPinsFragment: createPinsFragment,
+    map: map,
+    create: createPinsFragment,
     removeActiveClass: removeActiveClass
   };
 })();

@@ -5,10 +5,8 @@
     window.form.pinMain.addEventListener('mousedown', function (evt) {
       evt.preventDefault();
 
-      // Текст из ТЗ: первое взаимодействие с меткой (mousedown) переводит страницу в активное состояние.
-      // Событие mousedown должно срабатывать только при нажатии основной кнопки мыши (обычно — левая).
-      if (window.data.map.classList.contains('map--faded') && evt.button === util.Mouse.LEFT_KEY_BUTTON) {
-        window.form.enabledForm();
+      if (window.pins.map.classList.contains('map--faded') && evt.button === util.Mouse.LEFT_KEY_BUTTON) {
+        window.pins.create();
       };
 
       let startCoordinates = {
