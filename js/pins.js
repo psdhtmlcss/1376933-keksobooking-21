@@ -1,6 +1,7 @@
 'use strict';
 (function () {
   const MAX_COUNT = 5;
+  const TIMEOUT_IN_MS = 3000;
   const LOCATION_X_MIN = 0;
   const LOCATION_X_MAX = 1200;
   const LOCATION_Y_MIN = 130;
@@ -80,7 +81,7 @@
 
     document.body.insertAdjacentElement('afterbegin', node);
 
-    setTimeout(removeNode, 3000);
+    setTimeout(removeNode, TIMEOUT_IN_MS);
   };
 
   const createPinsFragment = () => {
@@ -92,11 +93,10 @@
     LOCATION_X_MAX: LOCATION_X_MAX,
     LOCATION_Y_MIN: LOCATION_Y_MIN,
     LOCATION_Y_MAX: LOCATION_Y_MAX,
-    PinProperties: PinProperties,
+    Properties: PinProperties,
     pins: pins,
     map: map,
-    createPinsFragment: createPinsFragment,
-    createPinsFragment: createPinsFragment,
+    create: createPinsFragment,
     removeActiveClass: removeActiveClass
   };
 })();

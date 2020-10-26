@@ -18,17 +18,17 @@
   };
 
   const setCoordinates = () => {
-    let leftPoint = Math.floor(window.pins.LOCATION_X_MIN - window.pins.PinProperties.MAIN_WIDTH / 2);
-    let rightPoint = Math.floor(window.pins.LOCATION_X_MAX - window.pins.PinProperties.MAIN_WIDTH / 2);
-    let bottomPoint = window.pins.LOCATION_Y_MAX - window.pins.PinProperties.MAIN_HEIGHT;
+    let leftPoint = Math.floor(window.pins.LOCATION_X_MIN - window.pins.Properties.MAIN_WIDTH / 2);
+    let rightPoint = Math.floor(window.pins.LOCATION_X_MAX - window.pins.Properties.MAIN_WIDTH / 2);
+    let bottomPoint = window.pins.LOCATION_Y_MAX - window.pins.Properties.MAIN_HEIGHT;
     let height;
     let x;
     let y;
 
     if (window.pins.map.classList.contains('map--faded')) {
-      height = window.pins.PinProperties.MAIN_WIDTH / 2;
+      height = window.pins.Properties.MAIN_WIDTH / 2;
     } else {
-      height = window.pins.PinProperties.MAIN_HEIGHT;
+      height = window.pins.Properties.MAIN_HEIGHT;
     };
 
     if (pinMain.offsetLeft <= leftPoint) {
@@ -38,7 +38,7 @@
       x = window.pins.LOCATION_X_MAX;
       pinMain.style.left = rightPoint + 'px';
     } else {
-      x = Math.floor(pinMain.offsetLeft + window.pins.PinProperties.MAIN_WIDTH / 2);
+      x = Math.floor(pinMain.offsetLeft + window.pins.Properties.MAIN_WIDTH / 2);
     };
 
     if (pinMain.offsetTop <= window.pins.LOCATION_Y_MIN) {
@@ -70,7 +70,7 @@
     document.removeEventListener('keydown', onKeyPressEnter);
     toggleForm(formElements);
     setCoordinates();
-    window.pins.createPinsFragment();
+    // window.pins.create();
   };
 
   const onKeyPressEnter = (evt) => {
@@ -124,6 +124,6 @@
     types: types,
     pinMain: pinMain,
     setCoordinates: setCoordinates,
-    enabledForm: enabledForm
+    enabled: enabledForm
   }
 })();

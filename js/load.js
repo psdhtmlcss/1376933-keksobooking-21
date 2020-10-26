@@ -14,9 +14,10 @@
     xhr.addEventListener('load', function () {
       if (xhr.status === StatusCode.OK) {
         onSuccess(xhr.response);
+        window.form.enabled();
       } else {
         onError(`Статус ответа: ${xhr.status} ${xhr.statusText}`);
-      }
+      };
     });
 
     xhr.addEventListener('error', function () {
