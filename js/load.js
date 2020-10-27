@@ -1,23 +1,34 @@
 'use strict';
 (function () {
-  const URL = 'https://21.javascript.pages.academy/keksobooking/data';
+  const GET_URL = 'https://21.javascript.pages.academy/keksobooking/data';
+  const SEND_URL = 'https://21.javascript.pages.academy/keksobooking';
   const TIMEOUT_IN_MS = 10000;
   const StatusCode = {
     OK: 200
   };
 
-  window.load = (onSuccess, onError) => {
+  window.load = (onSuccess, onError, data, createMessage) => {
     let xhr = new XMLHttpRequest();
 
     xhr.responseType = 'json';
 
     xhr.addEventListener('load', function () {
       if (xhr.status === StatusCode.OK) {
-        onSuccess(xhr.response);
-        window.form.enabled();
+        if (data) {
+          createMessage('success');
+          window.form.disabled();
+        } else {
+          onSuccess(xhr.response);
+          window.form.enabled();
+        };
+
       } else {
-        onError(`Статус ответа: ${xhr.status} ${xhr.statusText}`);
-      };
+        if (data) {
+          createMessage('error');
+        } else {
+          onError(`Статус ответа: ${xhr.status} ${xhr.statusText}`);
+        }
+      }
     });
 
     xhr.addEventListener('error', function () {
@@ -30,7 +41,13 @@
 
     xhr.timeout = TIMEOUT_IN_MS;
 
-    xhr.open('GET', URL);
-    xhr.send();
+    if (data) {
+      xhr.open('POST', SEND_URL);
+      xhr.send(data);
+    } else {
+      xhr.open('GET', GET_URL);
+      xhr.send();
+    }
+
   };
 })();

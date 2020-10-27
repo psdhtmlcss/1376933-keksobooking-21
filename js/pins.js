@@ -10,13 +10,21 @@
     WIDTH: 50,
     HEIGHT: 70,
     MAIN_WIDTH: 65,
-    MAIN_HEIGHT: 87
+    MAIN_HEIGHT: 87,
+    MAIN_START_POSITION_TOP: 375,
+    MAIN_START_POSITION_LEFT: 570
   };
 
   const map = document.querySelector('.map');
-  const pins = document.querySelector('.map__pins');
+  const pinsWrapper = document.querySelector('.map__pins');
+  const pinMain = pinsWrapper.querySelector('.map__pin--main');
   const pinsFragment = document.createDocumentFragment();
   const pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
+
+  const mainPinResetPosition = () => {
+    pinMain.style.top = PinProperties.MAIN_START_POSITION_TOP + 'px';
+    pinMain.style.left = PinProperties.MAIN_START_POSITION_LEFT + 'px';
+  };
 
   const setActiveClass = (pin) => {
     removeActiveClass();
@@ -51,6 +59,15 @@
     return pin;
   };
 
+  const removePins = () => {
+    let mapPin = document.querySelectorAll('.map__pin:not(.map__pin--main)');
+    if (mapPin.length > 0) {
+      mapPin.forEach(function (item) {
+        item.remove();
+      });
+    };
+  };
+
   const successHandler = (similarAds) => {
     let calculateMaxCount = (maxCount) => {
       if (similarAds.length > MAX_COUNT) {
@@ -68,7 +85,7 @@
       pinsFragment.appendChild(createPin(similarAds[i]));
     };
 
-    pins.appendChild(pinsFragment);
+    pinsWrapper.appendChild(pinsFragment);
   };
 
   const errorHandler = (errorMessage) => {
@@ -85,7 +102,7 @@
   };
 
   const createPinsFragment = () => {
-    window.load(successHandler, errorHandler);
+    window.load(successHandler, errorHandler, null, null);
   };
 
   window.pins = {
@@ -94,9 +111,12 @@
     LOCATION_Y_MIN: LOCATION_Y_MIN,
     LOCATION_Y_MAX: LOCATION_Y_MAX,
     Properties: PinProperties,
-    pins: pins,
+    wrapper: pinsWrapper,
+    main: pinMain,
     map: map,
     create: createPinsFragment,
+    remove: removePins,
+    mainResetPosition: mainPinResetPosition,
     removeActiveClass: removeActiveClass
   };
 })();

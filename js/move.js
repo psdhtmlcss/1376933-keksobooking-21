@@ -2,7 +2,7 @@
 (function () {
 
   const moveMainPin = () => {
-    window.form.pinMain.addEventListener('mousedown', function (evt) {
+    window.pins.main.addEventListener('mousedown', function (evt) {
       evt.preventDefault();
 
       if (window.pins.map.classList.contains('map--faded') && evt.button === util.Mouse.LEFT_KEY_BUTTON) {
@@ -27,8 +27,8 @@
           y: moveEvt.clientY
         };
 
-        window.form.pinMain.style.top = (window.form.pinMain.offsetTop - shift.y) + 'px';
-        window.form.pinMain.style.left = (window.form.pinMain.offsetLeft - shift.x) + 'px';
+        window.pins.main.style.top = (window.pins.main.offsetTop - shift.y) + 'px';
+        window.pins.main.style.left = (window.pins.main.offsetLeft - shift.x) + 'px';
         window.form.setCoordinates();
       };
 
