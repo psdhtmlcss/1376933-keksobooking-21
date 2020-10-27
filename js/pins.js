@@ -16,8 +16,8 @@
   };
 
   const map = document.querySelector('.map');
-  const pinsWrap = document.querySelector('.map__pins');
-  const pinMain = pinsWrap.querySelector('.map__pin--main');
+  const pinsWrapper = document.querySelector('.map__pins');
+  const pinMain = pinsWrapper.querySelector('.map__pin--main');
   const pinsFragment = document.createDocumentFragment();
   const pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
 
@@ -85,7 +85,7 @@
       pinsFragment.appendChild(createPin(similarAds[i]));
     };
 
-    pinsWrap.appendChild(pinsFragment);
+    pinsWrapper.appendChild(pinsFragment);
   };
 
   const errorHandler = (errorMessage) => {
@@ -111,7 +111,7 @@
     LOCATION_Y_MIN: LOCATION_Y_MIN,
     LOCATION_Y_MAX: LOCATION_Y_MAX,
     Properties: PinProperties,
-    wrap: pinsWrap,
+    wrapper: pinsWrapper,
     main: pinMain,
     map: map,
     create: createPinsFragment,

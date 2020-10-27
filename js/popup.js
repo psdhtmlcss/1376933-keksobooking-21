@@ -53,7 +53,7 @@
     ad.author.avatar.length !== 0 ? avatar.src = ad.author.avatar : avatar.remove();
     ad.offer.features.length > 0 ? fillFeatures(options, ad.offer.features) : features.remove();
     createPhotos(ad.offer.photos, photos);
-    window.pins.wrap.after(popup);
+    window.pins.wrapper.after(popup);
 
     document.addEventListener('keydown', onKeyPressEscape);
     closeBtn.addEventListener('click', closePopup);
