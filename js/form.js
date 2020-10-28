@@ -1,6 +1,7 @@
 'use strict';
 (function () {
   const adForm = document.querySelector('.ad-form');
+  const filterForm = document.querySelector('.map__filters');
   const btnReset = adForm.querySelector('.ad-form__reset');
   const formElements = document.querySelectorAll('.ad-form__element, .map__filter, .map__features');
   const inputAddress = adForm.querySelector('#address');
@@ -60,33 +61,43 @@
     });
   };
 
-  const onSubmitForm = (evt) => {
+  const onFormSubmit = (evt) => {
     evt.preventDefault();
-    window.backend.send(new FormData(adForm), window.statusMessage.create);
+    window.backend.send(window.statusMessage.create, new FormData(adForm));
   };
 
-  const enabledForm = () => {
+  const onAdsFilter = () => {
+    window.popup.close();
+    window.pins.remove();
+    let filteredPins = window.filter.data(window.pins.data());
+    window.pins.render(filteredPins);
+  };
+
+  const onFormEnabled = () => {
     adForm.classList.remove('ad-form--disabled');
     window.pins.map.classList.remove('map--faded');
     toggleForm(formElements);
     setCoordinates();
     document.removeEventListener('keydown', onKeyPressEnter);
-    adForm.addEventListener('submit', onSubmitForm);
-    btnReset.addEventListener('click', disabledForm);
+    adForm.addEventListener('submit', onFormSubmit);
+    filterForm.addEventListener('change', window.util.debounce(onAdsFilter));
+    btnReset.addEventListener('click', onFormDisabled);
   };
 
-  const disabledForm = () => {
+  const onFormDisabled = () => {
     adForm.classList.add('ad-form--disabled');
     window.pins.map.classList.add('map--faded');
     window.pins.remove();
     window.popup.close();
     toggleForm(formElements);
     adForm.reset();
+    filterForm.reset();
     window.pins.mainResetPosition();
     setCoordinates();
-    adForm.removeEventListener('submit', onSubmitForm);
-    btnReset.removeEventListener('click', disabledForm);
-    // Здесь также будет сброс фильтра
+    document.addEventListener('keydown', onKeyPressEnter);
+    adForm.removeEventListener('submit', onFormSubmit);
+    btnReset.removeEventListener('click', onFormDisabled);
+    filterForm.removeEventListener('change', onAdsFilter);
   };
 
   const onKeyPressEnter = (evt) => {
@@ -115,7 +126,6 @@
 
   document.addEventListener('keydown', onKeyPressEnter);
 
-  // Validation
   type.addEventListener('change', function () {
     price.min = types[type.value].min;
     price.placeholder = types[type.value].min;
@@ -142,7 +152,7 @@
   window.form = {
     types: types,
     setCoordinates: setCoordinates,
-    enabled: enabledForm,
-    disabled: disabledForm
+    enabled: onFormEnabled,
+    disabled: onFormDisabled
   }
 })();

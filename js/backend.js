@@ -1,51 +1,36 @@
 'use strict';
 (function () {
-  const GET_URL = 'https://21.javascript.pages.academy/keksobooking/data';
-  const SEND_URL = 'https://21.javascript.pages.academy/keksobooking';
   const TIMEOUT_IN_MS = 10000;
+  const BackendURLs = {
+    GET: 'https://21.javascript.pages.academy/keksobooking/data',
+    SEND: 'https://21.javascript.pages.academy/keksobooking'
+  };
   const StatusCode = {
     OK: 200
   };
 
-  const getData = (onSuccess, onError) => {
+  const createXHR = (method, url, onSuccess, onError, createMessage) => {
     let xhr = new XMLHttpRequest();
 
     xhr.responseType = 'json';
 
     xhr.addEventListener('load', function () {
       if (xhr.status === StatusCode.OK) {
-        onSuccess(xhr.response);
-        window.form.enabled();
+        if (onSuccess) {
+          onSuccess(xhr.response);
+        } else {
+          createMessage('success');
+          window.form.disabled();
+        }
+
       } else {
-        onError(`Статус ответа: ${xhr.status} ${xhr.statusText}`);
-      };
-
-      xhr.addEventListener('error', function () {
-        onError('Произошла ошибка соединения');
-      });
-
-      xhr.addEventListener('timeout', function () {
-        onError(`Запрос не успел выполниться за ${xhr.timeout}мс`);
-      });
-
-      xhr.timeout = TIMEOUT_IN_MS;
-
-      xhr.open('GET', GET_URL);
-      xhr.send();
+        if (onSuccess) {
+          onError(`Статус ответа: ${xhr.status} ${xhr.statusText}`);
+        } else {
+          createMessage('error');
+        }
+      }
     });
-  };
-
-  const sendData = (data, createMessage) => {
-    let xhr = new XMLHttpRequest();
-
-    xhr.responseType = 'json';
-
-    if (xhr.status === StatusCode.OK) {
-      createMessage('success');
-      window.form.disabled();
-    } else {
-      createMessage('error');
-    };
 
     xhr.addEventListener('error', function () {
       onError('Произошла ошибка соединения');
@@ -57,9 +42,16 @@
 
     xhr.timeout = TIMEOUT_IN_MS;
 
-    xhr.open('POST', SEND_URL);
-    xhr.send(data);
+    xhr.open(method, url);
+    return xhr;
+  };
 
+  const getData = (onSuccess, onError) => {
+    createXHR('GET', BackendURLs.GET, onSuccess, onError, null).send();
+  };
+
+  const sendData = (createMessage, data) => {
+    createXHR('POST', BackendURLs.SEND, null, null, createMessage).send(data);
   };
 
   window.backend = {
