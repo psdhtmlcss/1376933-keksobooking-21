@@ -102,7 +102,7 @@
   };
 
   const createPinsFragment = () => {
-    window.load(successHandler, errorHandler, null, null);
+    window.backend.get(successHandler, errorHandler);
   };
 
   window.pins = {

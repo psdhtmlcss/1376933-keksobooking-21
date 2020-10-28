@@ -62,7 +62,7 @@
 
   const onSubmitForm = (evt) => {
     evt.preventDefault();
-    window.load(null, null, new FormData(adForm), window.statusMessage.create);
+    window.backend.send(new FormData(adForm), window.statusMessage.create);
   };
 
   const enabledForm = () => {
