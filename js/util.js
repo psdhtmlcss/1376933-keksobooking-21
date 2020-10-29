@@ -1,5 +1,6 @@
 'use strict';
 (function () {
+  const DEBOUNCE_INTERVAL_IN_MS = 500;
   const Mouse = {
     LEFT_KEY_BUTTON: 0
   };
@@ -68,6 +69,19 @@
       };
 
       return `${num} ${str}`;
+    },
+
+    debounce: function (cb) {
+      let lastTimeout = null;
+
+      return function () {
+        if (lastTimeout) {
+          window.clearTimeout(lastTimeout);
+        }
+        lastTimeout = window.setTimeout(function () {
+          cb();
+        }, DEBOUNCE_INTERVAL_IN_MS);
+      };
     }
   };
 })();

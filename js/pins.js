@@ -1,6 +1,6 @@
 'use strict';
 (function () {
-  const MAX_COUNT = 5;
+  const MAX_PINS = 5;
   const TIMEOUT_IN_MS = 3000;
   const LOCATION_X_MIN = 0;
   const LOCATION_X_MAX = 1200;
@@ -20,6 +20,7 @@
   const pinMain = pinsWrapper.querySelector('.map__pin--main');
   const pinsFragment = document.createDocumentFragment();
   const pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
+  const filterForm = document.querySelector('.map__filters');
 
   const mainPinResetPosition = () => {
     pinMain.style.top = PinProperties.MAIN_START_POSITION_TOP + 'px';
@@ -68,24 +69,30 @@
     };
   };
 
-  const successHandler = (similarAds) => {
-    let calculateMaxCount = (maxCount) => {
-      if (similarAds.length > MAX_COUNT) {
-        maxCount = MAX_COUNT;
-      } else {
-        maxCount = similarAds.length;
-      };
-
-      return maxCount;
-    };
-
-    let maxCount = calculateMaxCount();
+  const renderPins = (data) => {
+    let maxCount = (data.length > MAX_PINS) ? MAX_PINS : data.length;
 
     for (let i = 0; i < maxCount; i++) {
-      pinsFragment.appendChild(createPin(similarAds[i]));
+      pinsFragment.appendChild(createPin(data[i]));
     };
 
     pinsWrapper.appendChild(pinsFragment);
+  };
+
+  let copyData = [];
+
+  const successHandler = (data) => {
+    let filteredData = [];
+    data.forEach(function (item) {
+      if (item.offer) {
+        filteredData.push(item);
+      }
+    });
+
+    copyData = filteredData.slice();
+
+    renderPins(copyData);
+    window.form.enabled();
   };
 
   const errorHandler = (errorMessage) => {
@@ -93,7 +100,7 @@
     let removeNode = () => {
       node.remove();
     };
-    node.style = 'position: fixed; left: 0; top: 0; z-index: 100; width: 100%;  margin: 0 auto; padding: 10px; text-align: center; color: white; background-color: #ff5635;';
+    node.style = 'position: fixed; left: 0; top: 0; z-index: 100; width: 100%;  margin: 0 auto; padding: 10px; text-align: center; color: white; background-color: rgba(255, 86, 53, .75);';
     node.textContent = errorMessage;
 
     document.body.insertAdjacentElement('afterbegin', node);
@@ -102,21 +109,26 @@
   };
 
   const createPinsFragment = () => {
-    window.load(successHandler, errorHandler, null, null);
+    window.backend.get(successHandler, errorHandler);
   };
 
   window.pins = {
+    MAX_PINS: MAX_PINS,
     LOCATION_X_MIN: LOCATION_X_MIN,
     LOCATION_X_MAX: LOCATION_X_MAX,
     LOCATION_Y_MIN: LOCATION_Y_MIN,
     LOCATION_Y_MAX: LOCATION_Y_MAX,
+    mainResetPosition: mainPinResetPosition,
+    removeActiveClass: removeActiveClass,
+    create: createPinsFragment,
     Properties: PinProperties,
     wrapper: pinsWrapper,
+    render: renderPins,
+    remove: removePins,
     main: pinMain,
     map: map,
-    create: createPinsFragment,
-    remove: removePins,
-    mainResetPosition: mainPinResetPosition,
-    removeActiveClass: removeActiveClass
+    data: function () {
+      return copyData;
+    }
   };
 })();
