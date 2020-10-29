@@ -63,7 +63,16 @@
 
   const onFormSubmit = (evt) => {
     evt.preventDefault();
-    window.backend.send(window.statusMessage.create, new FormData(adForm));
+    window.backend.send(onSuccessSubmit, onErrorSubmit, new FormData(adForm));
+  };
+
+  const onSuccessSubmit = () => {
+    onFormDisabled();
+    window.statusMessage.create('success');
+  };
+
+  const onErrorSubmit = (message) => {
+    window.statusMessage.create('error', message);
   };
 
   const onAdsFilter = () => {

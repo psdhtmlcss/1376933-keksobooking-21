@@ -79,12 +79,19 @@
     pinsWrapper.appendChild(pinsFragment);
   };
 
-  let copyFilteredAds = [];
+  let copyData = [];
 
   const successHandler = (data) => {
-    let filteredAds = window.filter.showOnlyHaveOfferField(data);
-    copyFilteredAds = filteredAds.slice();
-    renderPins(copyFilteredAds);
+    let filteredData = [];
+    data.forEach(function (item) {
+      if (item.offer) {
+        filteredData.push(item);
+      }
+    });
+
+    copyData = filteredData.slice();
+
+    renderPins(copyData);
     window.form.enabled();
   };
 
@@ -121,7 +128,7 @@
     main: pinMain,
     map: map,
     data: function () {
-      return copyFilteredAds;
+      return copyData;
     }
   };
 })();

@@ -3,22 +3,22 @@
   const main = document.querySelector('main');
 
   const createStatusMessage = (selector) => {
-    let template = document.querySelector(`#${selector}`).content.querySelector(`.${selector}`);
+    let messageTemplate = document.querySelector(`#${selector}`).content.querySelector(`.${selector}`);
     let fragment = document.createDocumentFragment();
-    let message = template.cloneNode(true);
-    let btn = message.querySelector('.error__button');
+    let messageElement = messageTemplate.cloneNode(true);
+    let messageCloseButton = messageElement.querySelector('.error__button');
 
-    fragment.appendChild(message);
+    fragment.appendChild(messageElement);
     main.appendChild(fragment);
 
-    if (btn) {
-      btn.addEventListener('click', function (evt) {
+    if (messageCloseButton) {
+      messageCloseButton.addEventListener('click', function (evt) {
         evt.preventDefault();
         closeStatusMessage();
       });
     };
 
-    message.addEventListener('click', closeStatusMessage);
+    messageElement.addEventListener('click', closeStatusMessage);
     document.addEventListener('keydown', onKeyPressEscape);
   };
 

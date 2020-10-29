@@ -9,26 +9,16 @@
     OK: 200
   };
 
-  const createXHR = (method, url, onSuccess, onError, createMessage) => {
+  const createXHR = (method, url, onSuccess, onError) => {
     let xhr = new XMLHttpRequest();
 
     xhr.responseType = 'json';
 
     xhr.addEventListener('load', function () {
       if (xhr.status === StatusCode.OK) {
-        if (onSuccess) {
-          onSuccess(xhr.response);
-        } else {
-          createMessage('success');
-          window.form.disabled();
-        }
-
+        onSuccess(xhr.response);
       } else {
-        if (onSuccess) {
-          onError(`Статус ответа: ${xhr.status} ${xhr.statusText}`);
-        } else {
-          createMessage('error');
-        }
+        onError(`Статус ответа: ${xhr.status} ${xhr.statusText}`);
       }
     });
 
@@ -47,11 +37,11 @@
   };
 
   const getData = (onSuccess, onError) => {
-    createXHR('GET', BackendURLs.GET, onSuccess, onError, null).send();
+    createXHR('GET', BackendURLs.GET, onSuccess, onError).send();
   };
 
-  const sendData = (createMessage, data) => {
-    createXHR('POST', BackendURLs.SEND, null, null, createMessage).send(data);
+  const sendData = (onSuccess, onError, data) => {
+    createXHR('POST', BackendURLs.SEND, onSuccess, onError).send(data);
   };
 
   window.backend = {
