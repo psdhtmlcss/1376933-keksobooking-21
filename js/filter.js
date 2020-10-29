@@ -47,14 +47,16 @@
 
   const filterData = function(data) {
     let ads = [];
-    data.forEach(function (item) {
-      if (ads.length < window.pins.MAX_PINS) {
-        let result = filterElements.every(function (filter) { return (filter.value === 'any') ? true : filterRules[filter.id](item, filter); });
-        if ( result ) {
-          ads.push(item);
-        }
+    let i = 0;
+    let result;
+
+    while (i < data.length && ads.length < window.pins.MAX_PINS) {
+      result = filterElements.every(function (filter) { return (filter.value === 'any') ? true : filterRules[filter.id](data[i], filter); });
+      if (result) {
+        ads.push(data[i]);
       }
-    });
+      i++;
+    };
 
     return ads;
   };
