@@ -1,5 +1,4 @@
 'use strict';
-(function () {
   const map = document.querySelector(`.map`);
   const popupTemplate = document.querySelector(`#card`).content.querySelector(`.popup`);
   const popupImg = popupTemplate.querySelector(`.popup__photo`);
@@ -24,7 +23,7 @@
       place.appendChild(imgFragment);
     } else {
       place.remove();
-    };
+    }
   };
 
   const createPopup = (ad) => {
@@ -80,4 +79,3 @@
     close: closePopup
   };
 
-})();

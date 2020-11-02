@@ -1,5 +1,4 @@
 'use strict';
-(function () {
   const TIMEOUT_IN_MS = 10000;
   const BackendURLs = {
     GET: `https://21.javascript.pages.academy/keksobooking/data`,
@@ -48,4 +47,3 @@
     get: getData,
     send: sendData
   }
-})();

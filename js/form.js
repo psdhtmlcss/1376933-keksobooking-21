@@ -1,5 +1,4 @@
 'use strict';
-(function () {
   const adForm = document.querySelector(`.ad-form`);
   const filterForm = document.querySelector(`.map__filters`);
   const btnReset = adForm.querySelector(`.ad-form__reset`);
@@ -166,4 +165,3 @@
     enabled: onFormEnabled,
     disabled: onFormDisabled
   }
-})();

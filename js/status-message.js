@@ -1,5 +1,4 @@
 'use strict';
-(function () {
   const main = document.querySelector(`main`);
 
   const createStatusMessage = (selector) => {
@@ -38,4 +37,3 @@
     create: createStatusMessage,
     close: closeStatusMessage
   };
-})();

@@ -1,5 +1,4 @@
 'use strict';
-(function () {
   const filterValueDefault = `any`;
   const priceMap = {
     'low': {
@@ -65,4 +64,3 @@
   window.filter = {
     data: filterData
   }
-})();

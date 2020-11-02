@@ -1,5 +1,4 @@
 'use strict';
-(function () {
   const MAX_PINS = 5;
   const TIMEOUT_IN_MS = 3000;
   const LOCATION_X_MIN = 0;
@@ -130,4 +129,3 @@
       return copyData;
     }
   };
-})();

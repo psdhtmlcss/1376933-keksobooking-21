@@ -1,5 +1,4 @@
 'use strict';
-(function () {
   const moveMainPin = () => {
     window.pins.main.addEventListener(`mousedown`, (evt) => {
       evt.preventDefault();
@@ -46,4 +45,3 @@
   };
 
   moveMainPin();
-})();

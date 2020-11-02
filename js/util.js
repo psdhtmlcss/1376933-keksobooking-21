@@ -1,5 +1,4 @@
 'use strict';
-(function () {
   const DEBOUNCE_INTERVAL_IN_MS = 500;
   const Mouse = {
     LEFT_KEY_BUTTON: 0
@@ -35,7 +34,7 @@
     },
 
     returnDeclination: (num, nominative, genitiveSingular, genitivePlural) => {
-      if (num > 10 && (Math.round((num % 100) / 10)) == 1) {
+      if (num > 10 && (Math.round((num % 100) / 10)) === 1) {
         return `${num} ${genitivePlural}`;
       } else {
         switch (num % 10) {
@@ -62,4 +61,3 @@
     }
   };
 
-})();

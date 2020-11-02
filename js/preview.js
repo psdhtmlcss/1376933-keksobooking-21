@@ -1,5 +1,4 @@
 'use strict';
-(function () {
   const FILE_TYPES = ['gif', 'jpg', 'jpeg', 'png'];
   const ImageProperties = {
     WIDTH: 70,
@@ -53,4 +52,3 @@
   window.photos = {
     reset: resetPreview
   };
-})();
