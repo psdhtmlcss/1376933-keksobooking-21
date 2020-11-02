@@ -15,41 +15,40 @@
     MAIN_START_POSITION_LEFT: 570
   };
 
-  const map = document.querySelector('.map');
-  const pinsWrapper = document.querySelector('.map__pins');
-  const pinMain = pinsWrapper.querySelector('.map__pin--main');
+  const map = document.querySelector(`.map`);
+  const pinsWrapper = document.querySelector(`.map__pins`);
+  const pinMain = pinsWrapper.querySelector(`.map__pin--main`);
   const pinsFragment = document.createDocumentFragment();
-  const pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
-  const filterForm = document.querySelector('.map__filters');
+  const pinTemplate = document.querySelector(`#pin`).content.querySelector(`.map__pin`);
 
   const mainPinResetPosition = () => {
-    pinMain.style.top = PinProperties.MAIN_START_POSITION_TOP + 'px';
-    pinMain.style.left = PinProperties.MAIN_START_POSITION_LEFT + 'px';
+    pinMain.style.top = PinProperties.MAIN_START_POSITION_TOP + `px`;
+    pinMain.style.left = PinProperties.MAIN_START_POSITION_LEFT + `px`;
   };
 
   const setActiveClass = (pin) => {
     removeActiveClass();
-    pin.classList.add('map__pin--active');
+    pin.classList.add(`map__pin--active`);
   };
 
   const removeActiveClass = () => {
-    let activePin = map.querySelector('.map__pin--active');
+    let activePin = map.querySelector(`.map__pin--active`);
 
     if (activePin) {
-      activePin.classList.remove('map__pin--active');
+      activePin.classList.remove(`map__pin--active`);
     };
   };
 
   const createPin = (pinArray) => {
     let pin = pinTemplate.cloneNode(true);
-    let img = pin.querySelector('img');
+    let img = pin.querySelector(`img`);
 
     pin.style.left = `${pinArray.location.x - PinProperties.WIDTH / 2}px`;
     pin.style.top = `${pinArray.location.y - PinProperties.HEIGHT}px`;
     img.src = pinArray.author.avatar;
     img.alt = pinArray.offer.title;
 
-    pin.addEventListener('click', function (evt) {
+    pin.addEventListener(`click`, (evt) => {
       if (evt.key === window.util.Keys.ENTER_KEY || evt.button === window.util.Mouse.LEFT_KEY_BUTTON) {
         window.popup.close();
         setActiveClass(pin);
@@ -61,9 +60,9 @@
   };
 
   const removePins = () => {
-    let mapPin = document.querySelectorAll('.map__pin:not(.map__pin--main)');
+    let mapPin = document.querySelectorAll(`.map__pin:not(.map__pin--main)`);
     if (mapPin.length > 0) {
-      mapPin.forEach(function (item) {
+      mapPin.forEach((item) => {
         item.remove();
       });
     };
@@ -83,7 +82,7 @@
 
   const successHandler = (data) => {
     let filteredData = [];
-    data.forEach(function (item) {
+    data.forEach((item) => {
       if (item.offer) {
         filteredData.push(item);
       }
@@ -96,14 +95,14 @@
   };
 
   const errorHandler = (errorMessage) => {
-    let node = document.createElement('div');
+    let node = document.createElement(`div`);
     let removeNode = () => {
       node.remove();
     };
-    node.style = 'position: fixed; left: 0; top: 0; z-index: 100; width: 100%;  margin: 0 auto; padding: 10px; text-align: center; color: white; background-color: rgba(255, 86, 53, .75);';
+    node.style = `position: fixed; left: 0; top: 0; z-index: 100; width: 100%;  margin: 0 auto; padding: 10px; text-align: center; color: white; background-color: rgba(255, 86, 53, .75);`;
     node.textContent = errorMessage;
 
-    document.body.insertAdjacentElement('afterbegin', node);
+    document.body.insertAdjacentElement(`afterbegin`, node);
 
     setTimeout(removeNode, TIMEOUT_IN_MS);
   };
@@ -127,7 +126,7 @@
     remove: removePins,
     main: pinMain,
     map: map,
-    data: function () {
+    data: () => {
       return copyData;
     }
   };

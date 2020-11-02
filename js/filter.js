@@ -1,5 +1,6 @@
 'use strict';
 (function () {
+  const filterValueDefault = `any`;
   const priceMap = {
     'low': {
       start: 0,
@@ -15,43 +16,43 @@
     }
   };
 
-  const filterElements = Array.from(document.querySelector('.map__filters').children);
+  const filters = Array.from(document.querySelector(`.map__filters`).children);
 
   const filterRules = {
-    'housing-type': function (data, filter) {
+    'housing-type': (data, filter) => {
       return filter.value === data.offer.type;
     },
 
-    'housing-price': function (data, filter) {
+    'housing-price': (data, filter) => {
       return data.offer.price >= priceMap[filter.value].start && data.offer.price < priceMap[filter.value].end;
     },
 
-    'housing-rooms': function (data, filter) {
+    'housing-rooms': (data, filter) => {
       return filter.value === data.offer.rooms.toString();
     },
 
-    'housing-guests': function (data, filter) {
+    'housing-guests': (data, filter) => {
       return filter.value === data.offer.guests.toString();
     },
 
-    'housing-features': function (data, filter) {
-      let checkListElements = Array.from(filter.querySelectorAll('input[type="checkbox"]:checked'));
+    'housing-features': (data, filter) => {
+      let checkListElements = Array.from(filter.querySelectorAll(`input[type="checkbox"]:checked`));
 
-      return checkListElements.every(function (checkbox) {
-        return data.offer.features.some(function (feature) {
+      return checkListElements.every((checkbox) => {
+        return data.offer.features.some((feature) => {
           return feature === checkbox.value;
         });
       });
     }
   };
 
-  const filterData = function(data) {
+  const filterData = (data) => {
     let ads = [];
     let i = 0;
     let result;
 
     while (i < data.length && ads.length < window.pins.MAX_PINS) {
-      result = filterElements.every(function (filter) { return (filter.value === 'any') ? true : filterRules[filter.id](data[i], filter); });
+      result = filters.every((filter) => { return (filter.value === filterValueDefault) ? true : filterRules[filter.id](data[i], filter); });
       if (result) {
         ads.push(data[i]);
       }
