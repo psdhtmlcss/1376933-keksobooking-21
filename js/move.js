@@ -1,11 +1,9 @@
 'use strict';
-(function () {
-
   const moveMainPin = () => {
-    window.pins.main.addEventListener('mousedown', function (evt) {
+    window.pins.main.addEventListener(`mousedown`, (evt) => {
       evt.preventDefault();
 
-      if (window.pins.map.classList.contains('map--faded') && evt.button === util.Mouse.LEFT_KEY_BUTTON) {
+      if (window.pins.map.classList.contains(`map--faded`) && evt.button === util.Mouse.LEFT_KEY_BUTTON) {
         window.pins.create();
       };
 
@@ -27,8 +25,8 @@
           y: moveEvt.clientY
         };
 
-        window.pins.main.style.top = (window.pins.main.offsetTop - shift.y) + 'px';
-        window.pins.main.style.left = (window.pins.main.offsetLeft - shift.x) + 'px';
+        window.pins.main.style.top = (window.pins.main.offsetTop - shift.y) + `px`;
+        window.pins.main.style.left = (window.pins.main.offsetLeft - shift.x) + `px`;
         window.form.setCoordinates();
       };
 
@@ -37,14 +35,13 @@
 
         window.form.setCoordinates();
 
-        document.removeEventListener('mousemove', onMouseMove);
-        document.removeEventListener('mouseup', onMouseUp);
+        document.removeEventListener(`mousemove`, onMouseMove);
+        document.removeEventListener(`mouseup`, onMouseUp);
       };
 
-      document.addEventListener('mousemove', onMouseMove);
-      document.addEventListener('mouseup', onMouseUp);
+      document.addEventListener(`mousemove`, onMouseMove);
+      document.addEventListener(`mouseup`, onMouseUp);
     });
   };
 
   moveMainPin();
-})();

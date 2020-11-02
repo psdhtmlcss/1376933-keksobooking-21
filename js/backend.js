@@ -1,9 +1,8 @@
 'use strict';
-(function () {
   const TIMEOUT_IN_MS = 10000;
   const BackendURLs = {
-    GET: 'https://21.javascript.pages.academy/keksobooking/data',
-    SEND: 'https://21.javascript.pages.academy/keksobooking'
+    GET: `https://21.javascript.pages.academy/keksobooking/data`,
+    SEND: `https://21.javascript.pages.academy/keksobooking`
   };
   const StatusCode = {
     OK: 200
@@ -12,9 +11,9 @@
   const createXHR = (method, url, onSuccess, onError) => {
     let xhr = new XMLHttpRequest();
 
-    xhr.responseType = 'json';
+    xhr.responseType = `json`;
 
-    xhr.addEventListener('load', function () {
+    xhr.addEventListener(`load`, () => {
       if (xhr.status === StatusCode.OK) {
         onSuccess(xhr.response);
       } else {
@@ -22,11 +21,11 @@
       }
     });
 
-    xhr.addEventListener('error', function () {
-      onError('Произошла ошибка соединения');
+    xhr.addEventListener(`error`, () => {
+      onError(`Произошла ошибка соединения`);
     });
 
-    xhr.addEventListener('timeout', function () {
+    xhr.addEventListener(`timeout`, () => {
       onError(`Запрос не успел выполниться за ${xhr.timeout}мс`);
     });
 
@@ -37,15 +36,14 @@
   };
 
   const getData = (onSuccess, onError) => {
-    createXHR('GET', BackendURLs.GET, onSuccess, onError).send();
+    createXHR(`GET`, BackendURLs.GET, onSuccess, onError).send();
   };
 
   const sendData = (onSuccess, onError, data) => {
-    createXHR('POST', BackendURLs.SEND, onSuccess, onError).send(data);
+    createXHR(`POST`, BackendURLs.SEND, onSuccess, onError).send(data);
   };
 
   window.backend = {
     get: getData,
     send: sendData
   }
-})();
