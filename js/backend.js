@@ -1,49 +1,49 @@
 'use strict';
-  const TIMEOUT_IN_MS = 10000;
-  const BackendURLs = {
-    GET: `https://21.javascript.pages.academy/keksobooking/data`,
-    SEND: `https://21.javascript.pages.academy/keksobooking`
-  };
-  const StatusCode = {
-    OK: 200
-  };
+const TIMEOUT_IN_MS = 10000;
+const BackendURLs = {
+  GET: `https://21.javascript.pages.academy/keksobooking/data`,
+  SEND: `https://21.javascript.pages.academy/keksobooking`
+};
+const StatusCode = {
+  OK: 200
+};
 
-  const createXHR = (method, url, onSuccess, onError) => {
-    let xhr = new XMLHttpRequest();
+const createXHR = (method, url, onSuccess, onError) => {
+  let xhr = new XMLHttpRequest();
 
-    xhr.responseType = `json`;
+  xhr.responseType = `json`;
 
-    xhr.addEventListener(`load`, () => {
-      if (xhr.status === StatusCode.OK) {
-        onSuccess(xhr.response);
-      } else {
-        onError(`Статус ответа: ${xhr.status} ${xhr.statusText}`);
-      }
-    });
+  xhr.addEventListener(`load`, () => {
+    if (xhr.status === StatusCode.OK) {
+      onSuccess(xhr.response);
+    } else {
+      onError(`Статус ответа: ${xhr.status} ${xhr.statusText}`);
+    }
+  });
 
-    xhr.addEventListener(`error`, () => {
-      onError(`Произошла ошибка соединения`);
-    });
+  xhr.addEventListener(`error`, () => {
+    onError(`Произошла ошибка соединения`);
+  });
 
-    xhr.addEventListener(`timeout`, () => {
-      onError(`Запрос не успел выполниться за ${xhr.timeout}мс`);
-    });
+  xhr.addEventListener(`timeout`, () => {
+    onError(`Запрос не успел выполниться за ${xhr.timeout}мс`);
+  });
 
-    xhr.timeout = TIMEOUT_IN_MS;
+  xhr.timeout = TIMEOUT_IN_MS;
 
-    xhr.open(method, url);
-    return xhr;
-  };
+  xhr.open(method, url);
+  return xhr;
+};
 
-  const getData = (onSuccess, onError) => {
-    createXHR(`GET`, BackendURLs.GET, onSuccess, onError).send();
-  };
+const getData = (onSuccess, onError) => {
+  createXHR(`GET`, BackendURLs.GET, onSuccess, onError).send();
+};
 
-  const sendData = (onSuccess, onError, data) => {
-    createXHR(`POST`, BackendURLs.SEND, onSuccess, onError).send(data);
-  };
+const sendData = (onSuccess, onError, data) => {
+  createXHR(`POST`, BackendURLs.SEND, onSuccess, onError).send(data);
+};
 
-  window.backend = {
-    get: getData,
-    send: sendData
-  }
+window.backend = {
+  get: getData,
+  send: sendData
+};
