@@ -1,5 +1,5 @@
 'use strict';
-const filterValueDefault = `any`;
+const FILTER_VALUE_DEFAULT = `any`;
 const priceMap = {
   'low': {
     start: 0,
@@ -52,7 +52,7 @@ const filterData = (data) => {
 
   while (i < data.length && ads.length < window.pins.MAX_PINS) {
     result = filters.every((filter) => {
-      return (filter.value === filterValueDefault) ? true : filterRules[filter.id](data[i], filter);
+      return (filter.value === FILTER_VALUE_DEFAULT) ? true : filterRules[filter.id](data[i], filter);
     });
     if (result) {
       ads.push(data[i]);

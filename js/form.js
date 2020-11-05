@@ -41,9 +41,9 @@ const setCoordinates = () => {
     x = Math.floor(window.pins.main.offsetLeft + window.pins.Properties.MAIN_WIDTH / 2);
   }
 
-  if (window.pins.main.offsetTop <= window.pins.Locations.Y_MIN) {
+  if (window.pins.main.offsetTop <= window.pins.Locations.Y_MIN - window.pins.Properties.MAIN_HEIGHT) {
     y = window.pins.Locations.Y_MIN;
-    window.pins.main.style.top = window.pins.Locations.Y_MIN + `px`;
+    window.pins.main.style.top = window.pins.Locations.Y_MIN - window.pins.Properties.MAIN_HEIGHT + `px`;
   } else if (window.pins.main.offsetTop >= bottomPoint) {
     y = window.pins.Locations.Y_MAX;
     window.pins.main.style.top = bottomPoint + `px`;
@@ -99,6 +99,7 @@ const onFormDisabled = () => {
   window.popup.close();
   window.photos.reset();
   toggleForm(formElements, true);
+  resetPrice();
   adForm.reset();
   filterForm.reset();
   window.pins.mainResetPosition();
@@ -128,6 +129,11 @@ const checkCapacity = () => {
   } else {
     capacity.setCustomValidity(``);
   }
+};
+
+const resetPrice = () => {
+  price.min = types[`flat`].min;
+  price.placeholder = types[`flat`].min;
 };
 
 toggleForm(formElements, true);

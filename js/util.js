@@ -7,6 +7,10 @@ const Keys = {
   ENTER_KEY: `Enter`,
   ESCAPE_KEY: `Escape`
 };
+const TestNumbers = {
+  ten: 10,
+  hundred: 100
+};
 
 window.util = {
   Mouse,
@@ -34,10 +38,10 @@ window.util = {
   },
 
   returnDeclination: (num, nominative, genitiveSingular, genitivePlural) => {
-    if (num > 10 && (Math.round((num % 100) / 10)) === 1) {
+    if (num > TestNumbers.ten && (Math.round((num % TestNumbers.hundred) / TestNumbers.ten)) === 1) {
       return `${num} ${genitivePlural}`;
     } else {
-      switch (num % 10) {
+      switch (num % TestNumbers.ten) {
         case 1: return `${num} ${nominative}`;
         case 2:
         case 3:

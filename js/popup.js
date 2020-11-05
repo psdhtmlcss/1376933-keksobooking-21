@@ -70,13 +70,13 @@ const createPopup = (ad) => {
   window.pins.wrapper.after(popup);
 
   document.addEventListener(`keydown`, onKeyPressEscape);
-  closeBtn.addEventListener(`click`, closePopup);
+  closeBtn.addEventListener(`click`, onPopupClose);
 
   return popup;
 
 };
 
-const closePopup = () => {
+const onPopupClose = () => {
   let card = map.querySelector(`.popup`);
   window.pins.removeActiveClass();
   if (card) {
@@ -86,11 +86,11 @@ const closePopup = () => {
 };
 
 const onKeyPressEscape = (evt) => {
-  window.util.isPressEscape(evt, closePopup);
+  window.util.isPressEscape(evt, onPopupClose);
 };
 
 window.popup = {
   create: createPopup,
-  close: closePopup
+  close: onPopupClose
 };
 
